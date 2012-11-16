@@ -36,6 +36,5 @@
 	<body>
 		<div class="container">
 			<div class="row"  id="header">
-				<h1 class="span12"><a href="<?=bloginfo('url')?>"><?=bloginfo('name')?></a></h1>
-				
+				<h1 class="span10 offset1"><a href="<?=bloginfo('url')?>">UCF Alert</a></h1>
 			</div>

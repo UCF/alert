@@ -7,9 +7,20 @@ Version: v0.0.0
 
 /* Header */
 #header {margin-top:20px;}
+#header h1 a {color:#E50606;text-transform:uppercase;font-size:30px;}
 
-/* Header Menu */
-#header-menu {margin-bottom:0;}
 
-/* Footer Menu */
-#footer-menu {margin-top:20px;}
+/* Page Content */
+.page-content {margin-bottom:20px;}
+.page-content h2 {margin-top:0;}
+.page-content .page-header {margin-bottom:5px;}
+.page-content .alert-content {font-size:125%;line-height:125%;}
+
+/* Sidebar */
+#sidebar {}
+#sidebar h3 {color:#333;font-size:14px;line-height:14px;margin-bottom:7px;}
+#sidebar p {padding-top:0;}
+#sidebar .contact p {font-size:100%;}
+
+/* Footer */
+#footer {text-align:center;}
