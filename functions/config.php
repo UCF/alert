@@ -48,6 +48,7 @@ define('GA_ACCOUNT', $theme_options['ga_account']);
 define('CB_UID', $theme_options['cb_uid']);
 define('CB_DOMAIN', $theme_options['cb_domain']);
 
+define('ROAM_SECURE_RSS_URL', 'https://alert.ucf.edu/rssfeed.php');
 
 /**
  * Set config values including meta tags, registered custom post types, styles,
@@ -55,6 +56,7 @@ define('CB_DOMAIN', $theme_options['cb_domain']);
  * object.
  **/
 Config::$custom_post_types = array(
+	'RoamSecureAlert'
 );
 
 Config::$custom_taxonomies = array(

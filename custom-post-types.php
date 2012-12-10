@@ -243,4 +243,21 @@ abstract class CustomPostType{
 	}
 }
 
+class RoamSecureAlert extends CustomPostType {
+
+	public 
+		$name           = 'roam_secure_alert',
+		$plural_name    = 'Roam Secure Alerts',
+		$singular_name  = 'Roam Secure Alert',
+		$add_new_item   = 'Add New Roam Secure Alert',
+		$edit_item      = 'Edit Roam Secure Alert',
+		$new_item       = 'New Roam Secure Alert',
+		$public         = True,
+		$use_editor     = True,
+		$use_thumbnails = False,
+		$use_order      = False,
+		$use_title      = True,
+		$use_metabox    = True;
+}
+
 ?>
