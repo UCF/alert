@@ -294,4 +294,20 @@ class ContactInformation extends CustomPostType {
 	}
 }
 
+class Alert extends CustomPostType {
+	public 
+		$name           = 'alert',
+		$plural_name    = 'Alerts',
+		$singular_name  = 'Alert',
+		$add_new_item   = 'Add New Alert',
+		$edit_item      = 'Edit Alert',
+		$new_item       = 'New Alert',
+		$public         = True,
+		$use_editor     = True,
+		$use_thumbnails = False,
+		$use_order      = False,
+		$use_title      = True,
+		$use_metabox    = False;
+}
+
 ?>
