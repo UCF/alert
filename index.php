@@ -2,18 +2,24 @@
 <div class="row page-content">
 	<div class="span7 offset1">
 		<?php
-			$alert = get_posts(array(
+			$alerts = get_posts(array(
 				'post_type'   => 'alert',
-				'numberposts' => 1,
+				'numberposts' => -1,
 				'orderby'     => 'post_date',
 				'order'       => 'desc'));
-			$alert = (count($alert) == 1) ? $alert[0] : False;
-			if($alert) {
-				$published = strtotime($alert->post_date);
-				$modified  = strtotime($alert->post_modified);
-				echo sprintf('<h2 class="page-header">%s<br /><small>%s</small></h2>', esc_html($alert->post_title), date('F j, Y', $published));
-				echo sprintf('<p class="muted">This information was last updated on <strong>%s at %s</strong></p>', date('F j, Y', $modified), date('g:i A e'), $modified);
-				echo sprintf('<div class="alert-content">%s</div>', str_replace(']]>', ']]&gt;', apply_filters('the_content', $alert->post_content)));
+			if(count($alerts) > 0) {
+				foreach($alerts as $alert) {
+					$published = strtotime($alert->post_date);
+					$modified  = strtotime($alert->post_modified);
+					echo sprintf('<h2 class="page-header">%s<br /><small>%s</small></h2>', esc_html($alert->post_title), date('F j, Y', $published));
+					echo sprintf('<p class="muted">This information was last updated on <strong>%s at %s</strong></p>', date('F j, Y', $modified), date('g:i A e'), $modified);
+					echo sprintf('<div class="alert-content">%s</div>', str_replace(']]>', ']]&gt;', apply_filters('the_content', $alert->post_content)));
+					if(count($alerts) > 1) {
+						echo '<hr />';
+					}
+				}
+			} else {
+				echo '<p class="well lead">There are currently no active alerts.</p>';
 			}
 		?>
 	</div>
@@ -36,11 +42,6 @@
 					echo sprintf('<h3>%s</h3><p>%s</p>', $name, $value);
 				} 
 			?>
-		</div>
-		<hr />
-		<div class="previous">
-			<h3>Previous Alerts</h3>
-			<p>There are no previous alerts</p>
 		</div>
 	</div>
 </div>
