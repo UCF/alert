@@ -29,20 +29,16 @@
 		</div>
 		<hr />
 		<div class="contact">
-			<h3>Emergency</h3>
-			<p>911</p>
-			<h3>UCF Police</h3>
-			<p>555-555-5555</p>
-			<h3>Office of Emergency Management</h3>
-			<p>555-555-5555</p>
-			<h3>UCF News &amp; Information</h3>
-			<p>555-555-5555</p>
-			<h3>Parking and Transportation Services</h3>
-			<p>555-555-5555</p>
-			<h3>Victim Services</h3>
-			<p>555-555-5555</p>
-			<h3>All Others</h3>
-			<p><a href="#">UCF Directory</a></p>
+			<?php 
+				$contacts = get_posts(array(
+					'post_type'    => 'contact_information',
+					'numberposts'  => -1));
+				foreach($contacts as $contact) {
+					$name  = get_post_meta($contact->ID, 'contact_information_name', True);
+					$value = get_post_meta($contact->ID, 'contact_information_value', True);
+					echo sprintf('<h3>%s</h3><p>%s</p>', $name, $value);
+				} 
+			?>
 		</div>
 		<hr />
 		<div class="previous">

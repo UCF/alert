@@ -56,7 +56,8 @@ define('ROAM_SECURE_RSS_URL', 'https://alert.ucf.edu/rssfeed.php');
  * object.
  **/
 Config::$custom_post_types = array(
-	'RoamSecureAlert'
+	'RoamSecureAlert',
+	'ContactInformation'
 );
 
 Config::$custom_taxonomies = array(
