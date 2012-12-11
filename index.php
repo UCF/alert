@@ -14,9 +14,6 @@
 					echo sprintf('<h2 class="page-header">%s<br /><small>%s</small></h2>', esc_html($alert->post_title), date('F j, Y', $published));
 					echo sprintf('<p class="muted">This information was last updated on <strong>%s at %s</strong></p>', date('F j, Y', $modified), date('g:i A e'), $modified);
 					echo sprintf('<div class="alert-content">%s</div>', str_replace(']]>', ']]&gt;', apply_filters('the_content', $alert->post_content)));
-					if(count($alerts) > 1) {
-						echo '<hr />';
-					}
 				}
 			} else {
 				echo '<p class="well lead">There are currently no active alerts.</p>';
