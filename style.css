@@ -14,7 +14,7 @@ Version: v0.0.0
 .page-content {margin-bottom:20px;}
 .page-content h2 {margin-top:0;}
 .page-content .page-header {margin-bottom:5px;}
-.page-content .alert-content {font-size:125%;line-height:125%;}
+.page-content .alert-content {font-size:125%;line-height:125%;margin-bottom:25px;}
 
 /* Sidebar */
 #sidebar {}
