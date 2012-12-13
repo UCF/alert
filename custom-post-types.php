@@ -243,23 +243,6 @@ abstract class CustomPostType{
 	}
 }
 
-class RoamSecureAlert extends CustomPostType {
-
-	public 
-		$name           = 'roam_secure_alert',
-		$plural_name    = 'Roam Secure Alerts',
-		$singular_name  = 'Roam Secure Alert',
-		$add_new_item   = 'Add New Roam Secure Alert',
-		$edit_item      = 'Edit Roam Secure Alert',
-		$new_item       = 'New Roam Secure Alert',
-		$public         = True,
-		$use_editor     = True,
-		$use_thumbnails = False,
-		$use_order      = False,
-		$use_title      = True,
-		$use_metabox    = True;
-}
-
 class ContactInformation extends CustomPostType {
 	public 
 		$name           = 'contact_information',
@@ -307,7 +290,23 @@ class Alert extends CustomPostType {
 		$use_thumbnails = False,
 		$use_order      = False,
 		$use_title      = True,
-		$use_metabox    = False;
+		$use_metabox    = True;
+
+	public function fields(){
+		$prefix = $this->options('name').'_';
+		return array(
+			array(
+				'name' => 'UCF.edu Alert Text',
+				'desc' => 
+					'This is text is originally supplied by Roam Secure. 
+					<strong>It appears on www.ucf.edu as an alert box.</strong>
+					<br />
+					Leave blank to disable the alert on www.ucf.edu.',
+				'id'   => $prefix.'short',
+				'type' => 'textarea'
+			),
+		);
+	}
 }
 
 ?>
