@@ -290,7 +290,8 @@ class Alert extends CustomPostType {
 		$use_thumbnails = False,
 		$use_order      = False,
 		$use_title      = True,
-		$use_metabox    = True;
+		$use_metabox    = True,
+		$taxonomies     = array();
 
 	public function fields(){
 		$prefix = $this->options('name').'_';
