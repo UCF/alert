@@ -15,6 +15,9 @@ foreach($items as $item) {
 	$content   = $item->get_description();
 	$date_time = $item->get_date();
 
+	# Remove stupid UCF Alert is powered by...
+	$content = trim(str_replace('UCF ALERT is powered by Cooper Notification RSAN', '', $content))	;
+
 	# Check to see if this alert already exists
 	$alert_exists = False;
 	$existing_alerts = get_posts(array(
