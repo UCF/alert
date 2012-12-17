@@ -42,9 +42,8 @@
 					'post_type'    => 'contact_information',
 					'numberposts'  => -1));
 				foreach($contacts as $contact) {
-					$name  = get_post_meta($contact->ID, 'contact_information_name', True);
 					$value = get_post_meta($contact->ID, 'contact_information_value', True);
-					echo sprintf('<h3>%s</h3><p>%s</p>', $name, $value);
+					echo sprintf('<h3>%s</h3><p>%s</p>', apply_filters('the_title', $contact->post_title), $value);
 				} 
 			?>
 		</div>

@@ -255,18 +255,12 @@ class ContactInformation extends CustomPostType {
 		$use_editor     = False,
 		$use_thumbnails = False,
 		$use_order      = True,
-		$use_title      = False,
+		$use_title      = True,
 		$use_metabox    = True;
 
 	public function fields(){
 		$prefix = $this->options('name').'_';
 		return array(
-			array(
-				'name' => 'Name',
-				'desc' => 'Example: UCF News And Information',
-				'id'   => $prefix.'name',
-				'type' => 'text'
-			),
 			array(
 				'name' => 'Value',
 				'desc' => 'Phone Number, URL, etc. Accepts HTML.',
