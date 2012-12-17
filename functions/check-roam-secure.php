@@ -39,7 +39,7 @@ foreach($items as $item) {
 			array(
 				'post_type'    => 'alert',
 				'post_title'   => $title,
-				'post_content' => '<p class="lead">There is no additional information available at this time.</p>',
+				'post_content' => '',
 				'post_status'  => 'publish',
 				'post_date'    => $wp_date_time
 			),
