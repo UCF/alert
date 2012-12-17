@@ -11,9 +11,17 @@
 				foreach($alerts as $alert) {
 					$published = strtotime($alert->post_date);
 					$modified  = strtotime($alert->post_modified);
+					$short     = get_post_meta($alert->ID, 'alert_short', True);
+
 					echo sprintf('<h2 class="page-header">%s<br /><small>%s</small></h2>', esc_html($alert->post_title), date('F j, Y', $published));
 					echo sprintf('<p class="muted">This information was last updated on <strong>%s at %s</strong></p>', date('F j, Y', $modified), date('g:i A e'), $modified);
-					echo sprintf('<div class="alert-content">%s</div>', str_replace(']]>', ']]&gt;', apply_filters('the_content', $alert->post_content)));
+					if($post->post_content != '') {
+						echo sprintf('<div class="alert-content">%s</div>', str_replace(']]>', ']]&gt;', apply_filters('the_content', $alert->post_content)));
+					} else if($short != '') {
+						echo sprintf('<div class="alert-content">%s</div>', $short);
+					} else {
+						echo '<p class="lead">There is no additional information available at this time.</p>';
+					}
 				}
 			} else {
 				echo '<p class="well lead">There are currently no active alerts.</p>';
