@@ -29,6 +29,10 @@ echo '<?xml version="1.0" encoding="'.get_option('blog_charset').'"?'.'>'; ?>
 	<language><?php bloginfo_rss( 'language' ); ?></language>
 	<?php do_action('rss2_head'); ?>
 	<?php while( have_posts()) : the_post(); ?>
+	<?php 
+		$short = get_post_meta($post->ID, 'alert_short', True);
+		if($short != '') {
+	?>
 	<item>
 		<title><?php the_title_rss() ?></title>
 		<link><?php the_permalink_rss() ?></link>
@@ -54,6 +58,7 @@ echo '<?xml version="1.0" encoding="'.get_option('blog_charset').'"?'.'>'; ?>
 <?php rss_enclosure(); ?>
 	<?php do_action('rss2_item'); ?>
 	</item>
+	<?php } ?>
 	<?php endwhile; ?>
 </channel>
 </rss>
