@@ -97,14 +97,6 @@ function create_utility_pages() {
 		'theme_options_page',
 		THEME_IMG_URL.'/pegasus.png'
 	);
-	add_utility_page(
-		__('Help'),
-		__('Help'),
-		'edit_posts',
-		'theme-help',
-		'theme_help_page',
-		THEME_IMG_URL.'/help.png'
-	);
 }
 
 
