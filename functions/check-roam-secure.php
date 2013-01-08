@@ -4,7 +4,7 @@ $_SERVER                = Array();
 $_SERVER['HTTP_HOST']   = 'webcom.dev.smca.ucf.edu';
 $_SERVER['REQUEST_URI'] = '/wp3/alert/';
 
-require('../../../wp-load.php');
+require('../../../../wp-load.php');
 
 $feed  = fetch_feed(ROAM_SECURE_RSS_URL);
 $items = $feed->get_items(0, 100);
