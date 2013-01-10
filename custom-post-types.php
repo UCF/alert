@@ -300,6 +300,20 @@ class Alert extends CustomPostType {
 				'id'   => $prefix.'short',
 				'type' => 'textarea'
 			),
+			array(
+				'name' => 'Type of Alert',
+				'desc' => 
+					'Specify what type of alert this is. Determines the type 
+					of icon that appears for the alert on www.ucf.edu.',
+				'id'   => $prefix.'alert_type',
+				'type' => 'select',
+				'default' => 'General Notification',
+				'options' => array(
+					'Weather Emergency' 	=> 'weather',
+					'Police Action' 		=> 'police',
+					'Update' 				=> 'update',
+				),
+			),
 		);
 	}
 }
