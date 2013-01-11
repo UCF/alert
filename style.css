@@ -12,11 +12,16 @@ Version: v0.0.0
 
 /* Page Content */
 .page-content {margin-bottom:20px;}
+
 .page-content h2 {margin-top:0;padding-bottom:0;font-size:25px;line-height:30px;}
+.page-content h2.general { padding-left:45px; background: url('static/img/type-general-32x32.png') top left no-repeat; }
+.page-content h2.weather { padding-left:45px; background: url('static/img/type-weather-32x32.png') top left no-repeat; }
+.page-content h2.police { padding-left:45px; background: url('static/img/type-police-32x32.png') top left no-repeat; }
+
 .page-content .page-header {margin-bottom:5px;}
-.page-content .page-header small { line-height:30px; }
+.page-content .page-header small { line-height:40px; }
 .page-content .alert-content {font-size:125%;line-height:125%;margin-top:20px;margin-bottom:30px;}
-.page-content p.muted { margin-bottom: 65px; }
+.page-content p.muted { margin-bottom: 70px; }
 
 /* Sidebar */
 #sidebar {}

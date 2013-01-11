@@ -13,9 +13,10 @@
 					$modified  		= strtotime($alert->post_modified);
 					$modified_est 	= new DateTime(null, new DateTimeZone('America/New_York'));
 					$modified_est 	= $modified_est->setTimestamp($modified);
+					$alert_type		= get_post_meta($alert->ID, 'alert_alert_type', True) ? get_post_meta($alert->ID, 'alert_alert_type', True) : 'general';
 					$short     		= get_post_meta($alert->ID, 'alert_short', True);
 
-					echo sprintf('<h2 class="page-header">%s<br /><small>%s</small></h2>', esc_html($alert->post_title), date('F j, Y', $published));
+					echo sprintf('<h2 class="page-header %s">%s<br /><small>%s</small></h2>', $alert_type, esc_html($alert->post_title), date('F j, Y', $published));
 					if($alert->post_content != '') {
 						echo sprintf('<div class="alert-content">%s</div>', str_replace(']]>', ']]&gt;', apply_filters('the_content', $alert->post_content)));
 					} else if($short != '') {
