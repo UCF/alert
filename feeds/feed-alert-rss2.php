@@ -38,57 +38,46 @@ echo '<?xml version="1.0" encoding="'.get_option('blog_charset').'"?'.'>'; ?>
 		'posts_per_page'	=> 1,
 		'orderby'			=> 'modified',
 		'order'				=> 'DESC',
-		'suppress_filters'  => FALSE  // Force Wordpress to apply our filter_where filter 
+		'suppress_filters'  => false,
 	);
 	
-	// Create a new filtering function that will add our WHERE clause to the query
-	function filter_where($where = '') {
-		// Alerts within our expiration period
-		$where .= " AND post_modified >= '" . date('Y-m-d', strtotime('-'.$expiration.' minutes')) . "'";
-		return $where;
-	}
+	$feed_query = get_posts($args);
+	$post		= $feed_query[0];
 	
-	// Apply the filter to our query
-	add_filter( 'posts_where', 'filter_where' );
-	$feed_query = new WP_Query($args);
-	remove_filter( 'posts_where', 'filter_where' );
-	
-	// Run the Loop
-	while( $feed_query->have_posts()) : $feed_query->the_post(); 
-	?>
-	
-	<?php 
+	if ( date('YmdHis', strtotime($post->post_modified)) >= date('YmdHis', strtotime('-'.$expiration.' minutes')) ) {
 		$short = get_post_meta($post->ID, 'alert_short', True);
 		if($short != '') {
 	?>
-	<item>
-		<title><?php the_title_rss() ?></title>
-		<link><?php the_permalink_rss() ?></link>
-		<postID><?php echo $post->ID; ?></postID>
-		<alertType><?php $alert_type = get_post_meta($post->ID, 'alert_alert_type', True) ? get_post_meta($post->ID, 'alert_alert_type', True) : 'general'; echo $alert_type; ?></alertType>
-		<comments><?php comments_link_feed(); ?></comments>
-		<pubDate><?php echo mysql2date('D, d M Y H:i:s +0000', get_post_time('Y-m-d H:i:s', true), false); ?></pubDate>
-		<dc:creator><?php the_author() ?></dc:creator>
-		<?php the_category_rss('rss2') ?>
-
-		<guid isPermaLink="false"><?php the_guid(); ?></guid>
-<?php if (get_option('rss_use_excerpt')) : ?>
-		<description><![CDATA[<?php echo get_post_meta($post->ID, 'alert_short', True); ?>]]></description>
-<?php else : ?>
-		<description><![CDATA[<?php echo get_post_meta($post->ID, 'alert_short', True); ?>]]></description>
-	<?php $content = get_the_content_feed('rss2'); ?>
-	<?php if ( strlen( $content ) > 0 ) : ?>
-		<content:encoded><![CDATA[<?php echo $content; ?>]]></content:encoded>
+		<item>
+			<title><?php the_title_rss() ?></title>
+			<link><?php the_permalink_rss() ?></link>
+			<postID><?php echo $post->ID; ?></postID>
+			<alertType><?php $alert_type = get_post_meta($post->ID, 'alert_alert_type', True) ? get_post_meta($post->ID, 'alert_alert_type', True) : 'general'; echo $alert_type; ?></alertType>
+			<comments><?php comments_link_feed(); ?></comments>
+			<pubDate><?php echo mysql2date('D, d M Y H:i:s +0000', get_post_time('Y-m-d H:i:s', true), false); ?></pubDate>
+			<dc:creator><?php the_author() ?></dc:creator>
+			<?php the_category_rss('rss2') ?>
+	
+			<guid isPermaLink="false"><?php the_guid(); ?></guid>
+	<?php if (get_option('rss_use_excerpt')) : ?>
+			<description><![CDATA[<?php echo get_post_meta($post->ID, 'alert_short', True); ?>]]></description>
 	<?php else : ?>
-		<content:encoded><![CDATA[<?php the_excerpt_rss(); ?>]]></content:encoded>
+			<description><![CDATA[<?php echo get_post_meta($post->ID, 'alert_short', True); ?>]]></description>
+		<?php $content = get_the_content_feed('rss2'); ?>
+		<?php if ( strlen( $content ) > 0 ) : ?>
+			<content:encoded><![CDATA[<?php echo $content; ?>]]></content:encoded>
+		<?php else : ?>
+			<content:encoded><![CDATA[<?php the_excerpt_rss(); ?>]]></content:encoded>
+		<?php endif; ?>
 	<?php endif; ?>
-<?php endif; ?>
-		<wfw:commentRss><?php echo esc_url( get_post_comments_feed_link(null, 'rss2') ); ?></wfw:commentRss>
-		<slash:comments><?php echo get_comments_number(); ?></slash:comments>
-<?php rss_enclosure(); ?>
-	<?php do_action('rss2_item'); ?>
-	</item>
-	<?php } ?>
-	<?php endwhile; wp_reset_postdata(); ?>
+			<wfw:commentRss><?php echo esc_url( get_post_comments_feed_link(null, 'rss2') ); ?></wfw:commentRss>
+			<slash:comments><?php echo get_comments_number(); ?></slash:comments>
+	<?php rss_enclosure(); ?>
+		<?php do_action('rss2_item'); ?>
+		</item>
+	<?php 
+		}
+	}
+	?>
 </channel>
 </rss>
