@@ -84,6 +84,52 @@ Config::$theme_settings = array(
 			'value'       => $theme_options['ga_account'],
 		)),
 	),
+	'Incoming Alert Options' => array(
+		new RadioField(array(
+			'name'        => 'Enable automated retrieval of alerts',
+			'id'          => THEME_OPTIONS_NAME.'[incoming_enabled]',
+			'description' => 'Turn this option on to enable automatic incoming alert data fetching.
+							  Unchecking this box will stop automatic retrieval of data from 
+							  the Incoming Alert RSS Feed specified below.',
+			'default' 	  => 0,
+			'choices'     => array(
+				'On'  => 1,
+				'Off' => 0,
+			),
+			'value'       => $theme_options['incoming_enabled'],
+		)),
+		new TextField(array(
+			'name'        => 'Incoming Alert RSS Feed',
+			'id'          => THEME_OPTIONS_NAME.'[incoming_rss_url]',
+			'description' => 'URL to the RSS feed for incoming alert data.',
+			'default'     => 'https://alert.ucf.edu/rssfeed.php',
+			'value'       => $theme_options['incoming_rss_url'],
+		)),
+	),
+	'Outgoing Alert Feed Options' => array(
+		new TextField(array(
+			'name'        => 'Alert Expiration Period',
+			'id'          => THEME_OPTIONS_NAME.'[outgoing_expiration]',
+			'description' => 'Period of time, in minutes, that an alert should be active
+							 (and appear on ucf.edu).<br/>
+							 An alert is considered active by checking how much time has 
+							 passed since the alert\'s Last Modified date/time. If an alert is 
+							 edited and saved after it has expired, it will become active 
+							 again.<br/ >
+							 Default value is 1 hour (60 minutes).',
+			'default'     => '60',
+			'value'       => $theme_options['outgoing_expiration'],
+		)),
+		new TextField(array(
+			'name'        => 'Alert Text Length',
+			'id'          => THEME_OPTIONS_NAME.'[outgoing_text_length]',
+			'description' => 'Max number of characters allowed for the alert content that
+							 is displayed on ucf.edu. (Words will not be truncated)<br/>
+							 Default value is 250.',
+			'default'     => '250',
+			'value'       => $theme_options['outgoing_text_length'],
+		)),
+	),
 );
 
 # Header links
