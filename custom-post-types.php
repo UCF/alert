@@ -293,10 +293,15 @@ class Alert extends CustomPostType {
 			array(
 				'name' => 'UCF.edu Alert Text',
 				'desc' => 
-					'This is text is originally supplied by Roam Secure. 
-					<strong>It appears on www.ucf.edu as an alert box.</strong>
+					'The text for the alert that is displayed on www.ucf.edu. 
+					When automatic alert fetching is enabled, this text is 
+					supplied by Roam Secure. 
 					<br />
-					Leave blank to disable the alert on www.ucf.edu.',
+					Word count is determined by the Alert Text Length value 
+					in Theme Options.
+					<br />
+					This field must have some content for the alert to appear 
+					on www.ucf.edu. Leaving it blank will disable the alert.',
 				'id'   => $prefix.'short',
 				'type' => 'textarea'
 			),
