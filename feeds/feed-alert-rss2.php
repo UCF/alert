@@ -28,7 +28,35 @@ echo '<?xml version="1.0" encoding="'.get_option('blog_charset').'"?'.'>'; ?>
 	<lastBuildDate><?php echo mysql2date('D, d M Y H:i:s +0000', get_lastpostmodified('GMT'), false); ?></lastBuildDate>
 	<language><?php bloginfo_rss( 'language' ); ?></language>
 	<?php do_action('rss2_head'); ?>
-	<?php while( have_posts()) : the_post(); ?>
+	
+	<?php 
+	$theme_options  = get_option(THEME_OPTIONS_NAME);
+	$expiration		= $theme_options['outgoing_expiration'] ? (int)$theme_options['outgoing_expiration'] : 60;
+	
+	$args = array(
+		'post_type'			=> 'alert',
+		'posts_per_page'	=> 1,
+		'orderby'			=> 'modified',
+		'order'				=> 'DESC',
+		'suppress_filters'  => FALSE  // Force Wordpress to apply our filter_where filter 
+	);
+	
+	// Create a new filtering function that will add our WHERE clause to the query
+	function filter_where($where = '') {
+		// Alerts within our expiration period
+		$where .= " AND post_modified >= '" . date('Y-m-d', strtotime('-'.$expiration.' minutes')) . "'";
+		return $where;
+	}
+	
+	// Apply the filter to our query
+	add_filter( 'posts_where', 'filter_where' );
+	$feed_query = new WP_Query($args);
+	remove_filter( 'posts_where', 'filter_where' );
+	
+	// Run the Loop
+	while( $feed_query->have_posts()) : $feed_query->the_post(); 
+	?>
+	
 	<?php 
 		$short = get_post_meta($post->ID, 'alert_short', True);
 		if($short != '') {
@@ -61,6 +89,6 @@ echo '<?xml version="1.0" encoding="'.get_option('blog_charset').'"?'.'>'; ?>
 	<?php do_action('rss2_item'); ?>
 	</item>
 	<?php } ?>
-	<?php endwhile; ?>
+	<?php endwhile; wp_reset_postdata(); ?>
 </channel>
 </rss>
