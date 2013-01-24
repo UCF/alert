@@ -1,14 +1,20 @@
 <?php get_header(); the_post();?>
 <div class="row page-content">
-	<div class="span7 offset1">
+	<div class="span8">
 		<?php
-			$alerts = get_posts(array(
+			$alert = get_posts(array(
 				'post_type'   => 'alert',
-				'numberposts' => -1,
+				'numberposts' => 1,
 				'orderby'     => 'post_date',
-				'order'       => 'desc'));
-			if(count($alerts) > 0) {
-				foreach($alerts as $alert) {
+				'order'       => 'desc')
+			);
+			$alert = $alert[0];
+			
+			if($alert !== NULL) {
+				$theme_options  = get_option(THEME_OPTIONS_NAME);
+				$expiration		= $theme_options['outgoing_expiration'] ? (int)$theme_options['outgoing_expiration'] : 60;
+				
+				if (date('YmdHis', strtotime($alert->post_modified)) >= date('YmdHis', strtotime('-'.$expiration.' minutes'))) {
 					$published 		= strtotime($alert->post_date);
 					$modified  		= strtotime($alert->post_modified);
 					$modified_est 	= new DateTime(null, new DateTimeZone('America/New_York'));
@@ -26,12 +32,15 @@
 					}
 					echo sprintf('<p class="muted">This information was last updated on <strong>%s at %s EST</strong></p>', date('F j, Y', $modified), $modified_est->format('g:i A'));
 				}
+				else {
+					echo '<p class="well lead">There are currently no active alerts.</p>';
+				}
 			} else {
 				echo '<p class="well lead">There are currently no active alerts.</p>';
 			}
 		?>
 	</div>
-	<div class="span3" id="sidebar">
+	<div class="span3 offset1" id="sidebar">
 		<div class="about">
 			<h3>About this Page</h3>
 			<p>
