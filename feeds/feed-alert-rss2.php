@@ -38,7 +38,6 @@ echo '<?xml version="1.0" encoding="'.get_option('blog_charset').'"?'.'>'; ?>
 		'posts_per_page'	=> 1,
 		'orderby'			=> 'modified',
 		'order'				=> 'DESC',
-		'suppress_filters'  => false,
 	);
 	
 	$feed_query = get_posts($args);
