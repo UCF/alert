@@ -10,7 +10,12 @@ require('../../../../wp-load.php');
 $theme_options = get_option(THEME_OPTIONS_NAME);
 if ($theme_options['incoming_enabled'] == 1 && $theme_options['incoming_rss_url'] !== '') {
 
+	// Grab the feed contents. Don't let Wordpress cache results.
+	function return_0() { return 0; }
+	add_filter('wp_feed_cache_transient_lifetime', 'return_0');
 	$feed  = fetch_feed($theme_options['incoming_rss_url']);
+	remove_filter('wp_feed_cache_transient_lifetime', 'return_0');
+	
 	$items = $feed->get_items(0, 100);
 	foreach($items as $item) {
 	
