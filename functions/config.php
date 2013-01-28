@@ -125,8 +125,8 @@ Config::$theme_settings = array(
 			'id'          => THEME_OPTIONS_NAME.'[outgoing_text_length]',
 			'description' => 'Max number of characters allowed for the alert content that
 							 is displayed on ucf.edu. (Words will not be truncated)<br/>
-							 Default value is 250.',
-			'default'     => '250',
+							 Default value is 350.',
+			'default'     => '350',
 			'value'       => $theme_options['outgoing_text_length'],
 		)),
 	),
