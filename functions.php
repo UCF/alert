@@ -7,6 +7,10 @@ require_once('functions/config.php');			# Where per theme settings are registere
 require_once('shortcodes.php');         		# Per theme shortcodes
 
 //Add theme-specific functions here.
+
+/**
+ * Remove unneeded admin menu items.
+ **/
 function remove_menus () {
 	global $menu;
 	$restricted = array(
@@ -30,6 +34,12 @@ function remove_menus () {
 }
 add_action('admin_menu', 'remove_menus');
 
+
+/**
+ * Force the default RSS2 feed to use our feed template
+ * when query var 'post_type' equals 'alert' and prevent
+ * it from caching.
+ **/
 function clear_rss_cache() {
 	global $wpdb;
 
@@ -50,4 +60,57 @@ remove_all_actions('do_feed_rss2');
 add_action('do_feed_rss2', 'clear_rss_cache', 10, 0);
 add_action('do_feed_rss2', 'alert_rss_feed', 10, 1 );
 
+
+/**
+ * Add a 'Last Modified' date column to the All Alerts display
+ * in the admin.
+ **/
+ 
+// Override the default columns 
+function edit_alert_columns() {
+	$columns = array(
+		'cb' 			=> '<input type="checkbox" />',
+		'title' 		=> 'Name',
+		'last_modified' => 'Last Modified (EST)',
+		'publish_date' 	=> 'Publish Date (EST)'
+	);
+	return $columns;
+}
+add_action('manage_edit-alert_columns', 'edit_alert_columns');
+
+// Custom columns content
+function manage_alert_columns( $column, $post_id ) {
+	global $post;
+	switch ( $column ) {
+		case 'last_modified':
+			$modified	= strtotime($post->post_date);
+			$modified_est 	= new DateTime(null, new DateTimeZone('America/New_York'));
+			$modified_est 	= $modified_est->setTimestamp($modified);
+			print $modified_est->format('Y/m/d g:i A');
+			break;
+		case 'publish_date':
+			if ($post->post_status == 'publish') {
+				$published 		= strtotime($post->post_date);
+				$published_est 	= new DateTime(null, new DateTimeZone('America/New_York'));
+				$published_est 	= $published_est->setTimestamp($published);
+				print $published_est->format('Y/m/d g:i A');
+			}
+			else {
+				print 'N/A (not published)';
+			}
+			break;
+		default:
+			break;
+	}
+}
+add_action('manage_alert_posts_custom_column', 'manage_alert_columns', 10, 2);
+
+// Sortable custom columns
+function sortable_alert_columns( $columns ) {
+	$columns['last_modified'] = 'last_modified';
+	$columns['publish_date'] = 'publish_date';
+	return $columns;
+}
+add_action('manage_edit-alert_sortable_columns', 'sortable_alert_columns'); 
+ 
 ?>
