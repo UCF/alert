@@ -43,20 +43,20 @@ echo '<?xml version="1.0" encoding="'.get_option('blog_charset').'"?'.'>'; ?>
 		'order'				=> 'DESC',
 	);
 	
-	$alerts = get_posts($args);
+	$posts = get_posts($args);
+	$post = $posts[0];
 	
-	foreach ($alerts as $post) {
-		if ( date('YmdHis', strtotime($post->post_modified)) >= date('YmdHis', strtotime('-'.$expiration.' minutes')) ) {
-			$short = get_post_meta($post->ID, 'alert_short', True);
-			if($short != '') {			
-				// We only want to truncate to the max alert length if the actual alert
-				// text length exceeds that max value.
-				$needs_truncating = $def_alert_length < strlen($short) ? true : false; 
-				// Truncate by text length, then remove the last full/partial word
-				if ($needs_truncating == true) {
-					$short = substr($short, 0, $def_alert_length);
-					$short = preg_replace('/ [^ ]*$/', ' ...', $short);
-				}
+	if ( date('YmdHis', strtotime($post->post_modified)) >= date('YmdHis', strtotime('-'.$expiration.' minutes')) ) {
+		$short = get_post_meta($post->ID, 'alert_short', True);
+		if($short != '') {			
+			// We only want to truncate to the max alert length if the actual alert
+			// text length exceeds that max value.
+			$needs_truncating = $def_alert_length < strlen($short) ? true : false; 
+			// Truncate by text length, then remove the last full/partial word
+			if ($needs_truncating == true) {
+				$short = substr($short, 0, $def_alert_length);
+				$short = preg_replace('/ [^ ]*$/', ' ...', $short);
+			}
 	?>
 			<item>
 				<title><?php the_title_rss() ?></title>
@@ -86,7 +86,6 @@ echo '<?xml version="1.0" encoding="'.get_option('blog_charset').'"?'.'>'; ?>
 			<?php do_action('rss2_item'); ?>
 			</item>
 	<?php 
-			}
 		}
 	}
 	?>
