@@ -1,9 +1,4 @@
 <?php
-
-$_SERVER                = Array();
-$_SERVER['HTTP_HOST']   = 'webcom.dev.smca.ucf.edu';
-$_SERVER['REQUEST_URI'] = '/wp3/alert/';
-
 require('../../../../wp-load.php');
 
 // Make sure feed fetching is turned on first
