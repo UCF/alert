@@ -2,19 +2,18 @@
 <div class="row page-content">
 	<div class="span8">
 		<?php
-			$alert = get_posts(array(
+			$alerts = get_posts(array(
 				'post_type'   => 'alert',
-				'numberposts' => 1,
+				'numberposts' => -1,
 				'orderby'     => 'post_date',
 				'order'       => 'desc')
 			);
-			$alert = $alert[0];
 			
-			if($alert !== NULL) {
+			if(!empty($alerts)) {
 				$theme_options  = get_option(THEME_OPTIONS_NAME);
-				$expiration		= $theme_options['outgoing_expiration'] ? (int)$theme_options['outgoing_expiration'] : 60;
 				
-				if (date('YmdHis', strtotime($alert->post_modified)) >= date('YmdHis', strtotime('-'.$expiration.' minutes'))) {
+				foreach ($alerts as $alert) {
+					
 					$published 		= strtotime($alert->post_date);
 					$modified  		= strtotime($alert->post_modified);
 					$modified_est 	= new DateTime(null, new DateTimeZone('America/New_York'));
@@ -31,11 +30,10 @@
 						echo '<p class="lead">There is no additional information available at this time.</p>';
 					}
 					echo sprintf('<p class="muted">This information was last updated on <strong>%s at %s EST</strong></p>', date('F j, Y', $modified), $modified_est->format('g:i A'));
-				}
-				else {
-					echo '<p class="well lead">There are currently no active alerts.</p>';
-				}
-			} else {
+					
+				} 
+			}
+			else {
 				echo '<p class="well lead">There are currently no active alerts.</p>';
 			}
 		?>

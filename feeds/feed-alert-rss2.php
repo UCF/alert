@@ -34,6 +34,8 @@ echo '<?xml version="1.0" encoding="'.get_option('blog_charset').'"?'.'>'; ?>
 	$expiration		  = $theme_options['outgoing_expiration'] ? (int)$theme_options['outgoing_expiration'] : 60;
 	$def_alert_length = $theme_options['outgoing_text_length'] ? (int)$theme_options['outgoing_text_length'] : 350;
 	
+	// We only want to display the most recent active alert
+	// at any given time.
 	$args = array(
 		'post_type'			=> 'alert',
 		'posts_per_page'	=> 1,
@@ -41,49 +43,50 @@ echo '<?xml version="1.0" encoding="'.get_option('blog_charset').'"?'.'>'; ?>
 		'order'				=> 'DESC',
 	);
 	
-	$feed_query = get_posts($args);
-	$post		= $feed_query[0];
+	$alerts = get_posts($args);
 	
-	if ( date('YmdHis', strtotime($post->post_modified)) >= date('YmdHis', strtotime('-'.$expiration.' minutes')) ) {
-		$short = get_post_meta($post->ID, 'alert_short', True);
-		if($short != '') {			
-			// We only want to truncate to the max alert length if the actual alert
-			// text length exceeds that max value.
-			$needs_truncating = $def_alert_length < strlen($short) ? true : false; 
-			// Truncate by text length, then remove the last full/partial word
-			if ($needs_truncating == true) {
-				$short = substr($short, 0, $def_alert_length);
-				$short = preg_replace('/ [^ ]*$/', ' ...', $short);
-			}
+	foreach ($alerts as $post) {
+		if ( date('YmdHis', strtotime($post->post_modified)) >= date('YmdHis', strtotime('-'.$expiration.' minutes')) ) {
+			$short = get_post_meta($post->ID, 'alert_short', True);
+			if($short != '') {			
+				// We only want to truncate to the max alert length if the actual alert
+				// text length exceeds that max value.
+				$needs_truncating = $def_alert_length < strlen($short) ? true : false; 
+				// Truncate by text length, then remove the last full/partial word
+				if ($needs_truncating == true) {
+					$short = substr($short, 0, $def_alert_length);
+					$short = preg_replace('/ [^ ]*$/', ' ...', $short);
+				}
 	?>
-		<item>
-			<title><?php the_title_rss() ?></title>
-			<link><?php the_permalink_rss() ?></link>
-			<postID><?php echo $post->ID; ?></postID>
-			<alertType><?php $alert_type = get_post_meta($post->ID, 'alert_alert_type', True) ? get_post_meta($post->ID, 'alert_alert_type', True) : 'general'; echo $alert_type; ?></alertType>
-			<comments><?php comments_link_feed(); ?></comments>
-			<pubDate><?php echo mysql2date('D, d M Y H:i:s +0000', get_post_time('Y-m-d H:i:s', true), false); ?></pubDate>
-			<dc:creator><?php the_author() ?></dc:creator>
-			<?php the_category_rss('rss2') ?>
-	
-			<guid isPermaLink="false"><?php the_guid(); ?></guid>
-	<?php if (get_option('rss_use_excerpt')) : ?>
-			<description><![CDATA[<?php echo $short; ?>]]></description>
-	<?php else : ?>
-			<description><![CDATA[<?php echo $short; ?>]]></description>
-		<?php $content = get_the_content_feed('rss2'); ?>
-		<?php if ( strlen( $content ) > 0 ) : ?>
-			<content:encoded><![CDATA[<?php echo $content; ?>]]></content:encoded>
+			<item>
+				<title><?php the_title_rss() ?></title>
+				<link><?php the_permalink_rss() ?></link>
+				<postID><?php echo $post->ID; ?></postID>
+				<alertType><?php $alert_type = get_post_meta($post->ID, 'alert_alert_type', True) ? get_post_meta($post->ID, 'alert_alert_type', True) : 'general'; echo $alert_type; ?></alertType>
+				<comments><?php comments_link_feed(); ?></comments>
+				<pubDate><?php echo mysql2date('D, d M Y H:i:s +0000', get_post_time('Y-m-d H:i:s', true), false); ?></pubDate>
+				<dc:creator><?php the_author() ?></dc:creator>
+				<?php the_category_rss('rss2') ?>
+		
+				<guid isPermaLink="false"><?php the_guid(); ?></guid>
+		<?php if (get_option('rss_use_excerpt')) : ?>
+				<description><![CDATA[<?php echo $short; ?>]]></description>
 		<?php else : ?>
-			<content:encoded><![CDATA[<?php the_excerpt_rss(); ?>]]></content:encoded>
+				<description><![CDATA[<?php echo $short; ?>]]></description>
+			<?php $content = get_the_content_feed('rss2'); ?>
+			<?php if ( strlen( $content ) > 0 ) : ?>
+				<content:encoded><![CDATA[<?php echo $content; ?>]]></content:encoded>
+			<?php else : ?>
+				<content:encoded><![CDATA[<?php the_excerpt_rss(); ?>]]></content:encoded>
+			<?php endif; ?>
 		<?php endif; ?>
-	<?php endif; ?>
-			<wfw:commentRss><?php echo esc_url( get_post_comments_feed_link(null, 'rss2') ); ?></wfw:commentRss>
-			<slash:comments><?php echo get_comments_number(); ?></slash:comments>
-	<?php rss_enclosure(); ?>
-		<?php do_action('rss2_item'); ?>
-		</item>
+				<wfw:commentRss><?php echo esc_url( get_post_comments_feed_link(null, 'rss2') ); ?></wfw:commentRss>
+				<slash:comments><?php echo get_comments_number(); ?></slash:comments>
+		<?php rss_enclosure(); ?>
+			<?php do_action('rss2_item'); ?>
+			</item>
 	<?php 
+			}
 		}
 	}
 	?>
