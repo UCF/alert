@@ -127,5 +127,23 @@ function no_redirect_on_404($redirect_url) {
     return $redirect_url;
 }
 add_filter('redirect_canonical', 'no_redirect_on_404');
+
+
+/**
+ * By default, Wordpress will return a 404 if no post content is returned for
+ * an RSS feed.  That's bad.  We hook into template_redirect so we can
+ * update the status header before the rest of the template loads.
+ *
+ * http://core.trac.wordpress.org/ticket/18505
+ **/
+function allow_empty_rss() {
+    global $wp_query;
+
+    if (is_feed()) {
+        status_header(200);
+        $wp_query->is_404 = false;
+    }
+} 
+add_filter('template_redirect', 'allow_empty_rss'); 
  
 ?>
