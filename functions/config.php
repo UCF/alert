@@ -117,6 +117,19 @@ Config::$theme_settings = array(
 			'value'       => $theme_options['outgoing_text_length'],
 		)),
 	),
+	'Styles' => array(
+		new RadioField(array(
+			'name'        => 'Enable Responsiveness',
+			'id'          => THEME_OPTIONS_NAME.'[bootstrap_enable_responsive]',
+			'description' => 'Turn on responsive styles provided by the Twitter Bootstrap framework.  This setting should be decided upon before building out subpages, etc. to ensure content is designed to shrink down appropriately.  Turning this off will enable the single 940px-wide Bootstrap layout.',
+			'default'     => 1,
+			'choices'     => array(
+				'On'  => 1,
+				'Off' => 0,
+			),
+			'value'       => $theme_options['bootstrap_enable_responsive'],
+	    )),
+	),
 );
 
 # Header links
