@@ -108,19 +108,6 @@ Config::$theme_settings = array(
 	),
 	'Outgoing Alert Feed Options' => array(
 		new TextField(array(
-			'name'        => 'Alert Expiration Period',
-			'id'          => THEME_OPTIONS_NAME.'[outgoing_expiration]',
-			'description' => 'Period of time, in minutes, that an alert should be active
-							 (and appear on ucf.edu).<br/>
-							 An alert is considered active by checking how much time has 
-							 passed since the alert\'s Last Modified date/time. If an alert is 
-							 edited and saved after it has expired, it will become active 
-							 again.<br/ >
-							 Default value is 1 hour (60 minutes).',
-			'default'     => '60',
-			'value'       => $theme_options['outgoing_expiration'],
-		)),
-		new TextField(array(
 			'name'        => 'Alert Text Length',
 			'id'          => THEME_OPTIONS_NAME.'[outgoing_text_length]',
 			'description' => 'Max number of characters allowed for the alert content that

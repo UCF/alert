@@ -300,8 +300,9 @@ class Alert extends CustomPostType {
 					Word count is determined by the Alert Text Length value 
 					in Theme Options.
 					<br />
-					This field must have some content for the alert to appear 
-					on www.ucf.edu. Leaving it blank will disable the alert.',
+					<strong>This field must have some content for the alert to 
+					appear on www.ucf.edu. Leaving it blank will disable the alert.
+					</strong>',
 				'id'   => $prefix.'short',
 				'type' => 'textarea'
 			),
@@ -318,6 +319,16 @@ class Alert extends CustomPostType {
 					'Police Action' 		=> 'police',
 					'Update' 				=> 'update',
 				),
+			),
+			array(
+				'name' => 'Alert Expiration',
+				'desc' => 
+					'The amount of time, in hours, before the alert is removed 
+					from the main alert feed and from UCF.edu.<br/>
+					Default is one hour.',
+				'id'   => $prefix.'expiration',
+				'type' => 'text',
+				'std' => '1',
 			),
 		);
 	}

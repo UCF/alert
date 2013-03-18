@@ -31,7 +31,6 @@ echo '<?xml version="1.0" encoding="'.get_option('blog_charset').'"?'.'>'; ?>
 	
 	<?php 
 	$theme_options    = get_option(THEME_OPTIONS_NAME);
-	$expiration		  = $theme_options['outgoing_expiration'] ? (int)$theme_options['outgoing_expiration'] : 60;
 	$def_alert_length = $theme_options['outgoing_text_length'] ? (int)$theme_options['outgoing_text_length'] : 350;
 	
 	// We only want to display the most recent active alert
@@ -46,7 +45,9 @@ echo '<?xml version="1.0" encoding="'.get_option('blog_charset').'"?'.'>'; ?>
 	$posts = get_posts($args);
 	$post = $posts[0];
 	
-	if ( date('YmdHis', strtotime($post->post_modified)) >= date('YmdHis', strtotime('-'.$expiration.' minutes')) ) {
+	$expiration = get_post_meta($post->ID, 'alert_expiration', True) ? (int)get_post_meta($post->ID, 'alert_expiration', True) : 1;
+	
+	if ( date('YmdHis', strtotime($post->post_modified)) >= date('YmdHis', strtotime('-'.$expiration.' hours')) ) {
 		$short = get_post_meta($post->ID, 'alert_short', True);
 		if($short != '') {			
 			// We only want to truncate to the max alert length if the actual alert
