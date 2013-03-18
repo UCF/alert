@@ -26,6 +26,10 @@
 		</script>
 		<?php endif;?>
 		
+		<script type="text/javascript">
+			var PRINT_HEADER_IMG = 'http://www.ucf.edu/wp-content/themes/Main-Site-Theme/static/img/ucflogo-print.png';
+		</script>
+		
 		<?  $post_type = get_post_type($post->ID);
 			if(($stylesheet_id = get_post_meta($post->ID, $post_type.'_stylesheet', True)) !== False
 				&& ($stylesheet_url = wp_get_attachment_url($stylesheet_id)) !== False) { ?>

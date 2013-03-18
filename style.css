@@ -5,6 +5,9 @@ Github Theme URI: https://github.com/UCF/alert
 Version: v0.0.0
 */
 
+/* Black Bar */
+.print-only { display: none; }
+
 /* Header */
 #header {margin-top:20px; margin-bottom:10px;}
 #header h1 a {color:#E50606;text-transform:uppercase;font-size:30px;}
