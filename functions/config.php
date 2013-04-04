@@ -50,6 +50,11 @@ define('CB_DOMAIN', $theme_options['cb_domain']);
 
 define('ROAM_SECURE_RSS_URL', 'https://alert.ucf.edu/rssfeed.php');
 
+# Protocol-agnostic URL schemes aren't supported before WP 3.5,
+# so we have to determine the protocol before registering
+# any non-relative resources.
+define('CURRENT_PROTOCOL', is_ssl() ? 'https://' : 'http://');
+
 /**
  * Set config values including meta tags, registered custom post types, styles,
  * scripts, and any other statically defined assets that belong in the Config
@@ -132,10 +137,6 @@ Config::$theme_settings = array(
 	),
 );
 
-// Protocol-agnostic URL schemes aren't supported before WP 3.5,
-// so we have to determine the protocol before registering
-// any non-relative resources.
-$protocol = is_ssl() ? 'https://' : 'http://';
 
 # Header links
 Config::$links = array(
@@ -146,7 +147,7 @@ Config::$links = array(
 # Header styles
 Config::$styles = array(
 	array('admin' => True, 'src' => THEME_CSS_URL.'/admin.css',),
-	$protocol.'www.ucf.edu/wp-content/themes/Main-Site-Theme/static/css/university-header.css',
+	CURRENT_PROTOCOL.'www.ucf.edu/wp-content/themes/Main-Site-Theme/static/css/university-header.css',
 	THEME_STATIC_URL.'/bootstrap/bootstrap/css/bootstrap.css',
 );
 
@@ -178,9 +179,9 @@ if ($theme_options['bootstrap_enable_responsive'] == 1) {
 
 # Scripts (output in footer)
 Config::$scripts = array(
-	array('name' => 'jquery', 'src' => $protocol.'ajax.googleapis.com/ajax/libs/jquery/1.8.2/jquery.min.js',),
+	array('name' => 'jquery', 'src' => CURRENT_PROTOCOL.'ajax.googleapis.com/ajax/libs/jquery/1.8.2/jquery.min.js',),
 	array('admin' => True, 'src' => THEME_JS_URL.'/admin.js',),
-	$protocol.'www.ucf.edu/wp-content/themes/Main-Site-Theme/static/js/university-header.js',
+	CURRENT_PROTOCOL.'www.ucf.edu/wp-content/themes/Main-Site-Theme/static/js/university-header.js',
 	THEME_STATIC_URL.'/bootstrap/bootstrap/js/bootstrap.js',
 );
 
