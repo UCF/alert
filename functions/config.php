@@ -132,6 +132,11 @@ Config::$theme_settings = array(
 	),
 );
 
+// Protocol-agnostic URL schemes aren't supported before WP 3.5,
+// so we have to determine the protocol before registering
+// any non-relative resources.
+$protocol = is_ssl() ? 'https://' : 'http://';
+
 # Header links
 Config::$links = array(
 	array('rel' => 'shortcut icon', 'href' => THEME_IMG_URL.'/favicon.ico',),
@@ -141,7 +146,7 @@ Config::$links = array(
 # Header styles
 Config::$styles = array(
 	array('admin' => True, 'src' => THEME_CSS_URL.'/admin.css',),
-	'http://www.ucf.edu/wp-content/themes/Main-Site-Theme/static/css/university-header.css',
+	$protocol.'www.ucf.edu/wp-content/themes/Main-Site-Theme/static/css/university-header.css',
 	THEME_STATIC_URL.'/bootstrap/bootstrap/css/bootstrap.css',
 );
 
@@ -173,9 +178,9 @@ if ($theme_options['bootstrap_enable_responsive'] == 1) {
 
 # Scripts (output in footer)
 Config::$scripts = array(
-	array('name' => 'jquery', 'src' => 'http://ajax.googleapis.com/ajax/libs/jquery/1.8.2/jquery.min.js',),
+	array('name' => 'jquery', 'src' => $protocol.'ajax.googleapis.com/ajax/libs/jquery/1.8.2/jquery.min.js',),
 	array('admin' => True, 'src' => THEME_JS_URL.'/admin.js',),
-	'http://www.ucf.edu/wp-content/themes/Main-Site-Theme/static/js/university-header.js',
+	$protocol.'www.ucf.edu/wp-content/themes/Main-Site-Theme/static/js/university-header.js',
 	THEME_STATIC_URL.'/bootstrap/bootstrap/js/bootstrap.js',
 );
 
