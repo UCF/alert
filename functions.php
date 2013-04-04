@@ -83,7 +83,7 @@ function manage_alert_columns( $column, $post_id ) {
 	global $post;
 	switch ( $column ) {
 		case 'last_modified':
-			$modified	= strtotime($post->post_date);
+			$modified	= strtotime($post->post_modified);
 			$modified_est 	= new DateTime(null, new DateTimeZone('America/New_York'));
 			$modified_est 	= $modified_est->setTimestamp($modified);
 			print $modified_est->format('Y/m/d g:i A');
