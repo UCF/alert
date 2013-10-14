@@ -147,7 +147,6 @@ Config::$links = array(
 # Header styles
 Config::$styles = array(
 	array('admin' => True, 'src' => THEME_CSS_URL.'/admin.css',),
-	CURRENT_PROTOCOL.'www.ucf.edu/wp-content/themes/Main-Site-Theme/static/css/university-header.css',
 	THEME_STATIC_URL.'/bootstrap/bootstrap/css/bootstrap.css',
 );
 
@@ -181,7 +180,7 @@ if ($theme_options['bootstrap_enable_responsive'] == 1) {
 Config::$scripts = array(
 	array('name' => 'jquery', 'src' => CURRENT_PROTOCOL.'ajax.googleapis.com/ajax/libs/jquery/1.8.2/jquery.min.js',),
 	array('admin' => True, 'src' => THEME_JS_URL.'/admin.js',),
-	CURRENT_PROTOCOL.'www.ucf.edu/wp-content/themes/Main-Site-Theme/static/js/university-header.js',
+	'//universityheader.ucf.edu/bar/js/university-header.js?use-bootstrap-overrides=1',
 	THEME_STATIC_URL.'/bootstrap/bootstrap/js/bootstrap.js',
 );
 
