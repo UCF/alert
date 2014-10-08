@@ -122,6 +122,16 @@ Config::$theme_settings = array(
 			'value'       => $theme_options['outgoing_text_length'],
 		)),
 	),
+	'Main Site Options' => array(
+		new TextField(array(
+			'name'        => 'Main Site ID',
+			'id'          => THEME_OPTIONS_NAME.'[main_site_id]',
+			'description' => 'ID of the Main Site on this multisite network. This setting
+							 is required for managing Main Site switchovers from this site.',
+			'default'     => '1',
+			'value'       => $theme_options['main_site_id'],
+		)),
+	),
 	'Styles' => array(
 		new RadioField(array(
 			'name'        => 'Enable Responsiveness',

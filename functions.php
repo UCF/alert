@@ -145,7 +145,8 @@ function allow_empty_rss() {
     }
 } 
 add_filter('template_redirect', 'allow_empty_rss'); 
- 
+
+
 /**
  * Add ID attribute to registered University Header script.
  **/
@@ -158,4 +159,11 @@ function add_id_to_ucfhb($url) {
 }
 add_filter('clean_url', 'add_id_to_ucfhb', 10, 3);
 
+
+/**
+ * Update the Main Site's home page to use the alert site's content.
+ **/
+function switchout_main_site_homepg() {
+	return;
+}
 ?>

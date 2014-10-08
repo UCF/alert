@@ -90,6 +90,14 @@ function init_theme_options(){
  **/
 function create_utility_pages() {
 	add_utility_page(
+		__('Emergency Main Site Switchover'),
+		__('Emergency Main Site Switchover'),
+		'edit_others_posts', // Editor and above can access
+		'main-site-switchover',
+		'main_site_switchover_page',
+		THEME_IMG_URL.'/pegasus.png'
+	);
+	add_utility_page(
 		__(THEME_OPTIONS_PAGE_TITLE),
 		__(THEME_OPTIONS_PAGE_TITLE),
 		'edit_theme_options',
@@ -119,6 +127,14 @@ function theme_help_page(){
  **/
 function theme_options_page(){
 	include(THEME_INCLUDES_DIR.'/theme-options.php');
+}
+
+
+/**
+ * Outputs main site switchover page html
+ **/
+function main_site_switchover_page(){
+	include(THEME_INCLUDES_DIR.'/main-site-switchover.php');
 }
 
 
