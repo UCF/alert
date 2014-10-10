@@ -197,9 +197,13 @@ function switchout_main_site_homepg($activate=true) {
 	// Run a ban on the home page if VDP plugin is activated on Main Site
 	if (is_plugin_active('varnish-dependency-purge/varnish-dependency-purge.php')) {
 		$ban_urls = array('http' => get_home_url($main_site_id, null, 'http'), 'https' => get_home_url($main_site_id, null, 'https'));
-		// $vdp variable should already be available by this point
-		if ($vdp->varnish_nodes) {
-			foreach ($vdp->varnish_nodes as $node) {
+		// $vdp variable should already be available by this point,
+		// but create it in case it's not
+		if (!$vdp) { $vdp = new VDP(); }
+		$nodes = $vdp->parse_varnish_nodes();
+
+		if ($nodes) {
+			foreach ($nodes as $node) {
 				foreach ($ban_urls as $protocol->$url) {
 					$node->ban($url);
 				}
