@@ -49,7 +49,7 @@ define(MAIN_SITE_ID, $theme_options['main_site_id']);
 			<div class="well">
 				<p>Current status: <?=$homepg_is_switched ? '<span class="activated">Activated</span>' : '<span class="deactivated">Deactivated</span>'?></p>
 			</div>
-			
+
 			<p>
 				Click the button below to toggle the home page of ucf.edu.  When activated, the home page of
 				www.ucf.edu will redirect to www.ucf.edu/alert.  Deactivating this switch will return ucf.edu
@@ -68,7 +68,7 @@ define(MAIN_SITE_ID, $theme_options['main_site_id']);
 				<?php if ($homepg_is_switched) { ?>
 					<input type="submit" class="button" name="submit-button" value="<?= __('Deactivate')?>" />
 				<?php } else { ?>
-					<input type="submit" class="button-primary" name="submit-button" value="<?= __('Activate')?>" />
+					<input type="submit" class="button-primary" name="submit-button" value="<?= __('Activate')?>" onclick="return confirm('Are you sure you want to change the homepage of ucf.edu to display alert content?')" />
 				<?php } ?>
 			</div>
 
