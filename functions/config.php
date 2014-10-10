@@ -131,6 +131,17 @@ Config::$theme_settings = array(
 			'default'     => '1',
 			'value'       => $theme_options['main_site_id'],
 		)),
+		new TextField(array(
+			'name'        => 'Main Site Alert Switchover Page ID',
+			'id'          => THEME_OPTIONS_NAME.'[main_site_alertpg_id]',
+			'description' => 'ID of the page on the Main Site that should be switched to
+							 when the Text-Only Main Site Switchover is activated. The page
+							 with this ID should redirect to www.ucf.edu/alert using the
+							 Page Links To plugin. This setting is required for managing
+							 Main Site switchovers from this site.',
+			'default'     => '1',
+			'value'       => $theme_options['main_site_alertpg_id'],
+		)),
 	),
 	'Styles' => array(
 		new RadioField(array(

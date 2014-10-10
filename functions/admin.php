@@ -90,8 +90,8 @@ function init_theme_options(){
  **/
 function create_utility_pages() {
 	add_utility_page(
-		__('Emergency Main Site Switchover'),
-		__('Emergency Main Site Switchover'),
+		__('Text-Only Main Site'),
+		__('Text-Only Main Site Switchover'),
 		'edit_others_posts', // Editor and above can access
 		'main-site-switchover',
 		'main_site_switchover_page',

@@ -161,9 +161,130 @@ add_filter('clean_url', 'add_id_to_ucfhb', 10, 3);
 
 
 /**
- * Update the Main Site's home page to use the alert site's content.
+ * Returns a theme option value or NULL if it doesn't exist
  **/
-function switchout_main_site_homepg() {
-	return;
+function get_theme_option($key) {
+	global $theme_options;
+	return isset($theme_options[$key]) ? $theme_options[$key] : NULL;
+}
+
+
+/**
+ * Update the Main Site's home page to use the alert site's content.
+ * Setting $activate to false will restore the Main Site to display
+ * latest posts (which returns the correct home.php template.)
+ **/
+function switchout_main_site_homepg($activate=true) {
+	$errors = new WP_Error();
+
+	$main_site_id = intval(get_theme_option('main_site_id'));
+	$main_site_alertpg_id = intval(get_theme_option('main_site_alertpg_id'));
+
+	switch_to_blog($main_site_id);
+
+	// Set the home page
+	if ($activate == true) {
+		$page_on_front = update_option('page_on_front', $main_site_alertpg_id);
+		$show_on_front = update_option('show_on_front', 'page');
+	}
+	else {
+		$page_on_front = update_option('page_on_front', '0');
+		$show_on_front = update_option('show_on_front', 'posts');
+	}
+	if (!$page_on_front) { $errors->add('switchover_update_pof_failed', 'update_option(\'page_on_front\') failed!'); }
+	if (!$show_on_front) { $errors->add('switchover_update_sof_failed', 'update_option(\'show_on_front\') failed!'); }
+
+	// Run a ban on the home page if VDP plugin is activated on Main Site
+	if (is_plugin_active('varnish-dependency-purge/varnish-dependency-purge.php')) {
+		$ban_urls = array('http' => get_home_url($main_site_id, null, 'http'), 'https' => get_home_url($main_site_id, null, 'https'));
+		// $vdp variable should already be available by this point
+		if ($vdp->varnish_nodes) {
+			foreach ($vdp->varnish_nodes as $node) {
+				foreach ($ban_urls as $protocol->$url) {
+					$node->ban($url);
+				}
+			}
+		}
+		else {
+			$errors->add('switchover_missing_vdp_nodes', 'VDP plugin is activated on Main Site, but varnish nodes are not set!');
+		}
+	}
+
+	restore_current_blog();
+
+	// Return errors or true if everything worked
+	if (!empty($errors->errors)) {
+		return $errors;
+	}
+	else {
+		return true;
+	}
+}
+
+
+/**
+ * Perform a series of checks to make sure the Main Site on this
+ * multisite instance exists, has all necessary plugins installed,
+ * and has a page with the ID we specify in this site's theme options.
+ *
+ * If everything looks valid, this function returns false.  Otherwise,
+ * a WP_Error object is returned with relevant errors.
+ **/
+function pre_main_site_switchover_errors() {
+	$errors = new WP_Error();
+
+	// Get the Main Site ID and the ID of the page to switch to set in Theme Options.
+	// If one of these is not set, return now with an error.
+	$main_site_id = intval(get_theme_option('main_site_id'));
+	$main_site_alertpg_id = intval(get_theme_option('main_site_alertpg_id'));
+	if (!$main_site_id) { $errors->add('pre_switchover_no_siteid', 'Main Site ID is not set in Theme Options.'); }
+	if (!$main_site_alertpg_id) { $errors->add('pre_switchover_no_alertpgid', 'Main Site Alert Switchover Page ID is not set in Theme Options.'); }
+
+	// Make sure the site with the given ID exists before switching.
+	// switch_to_blog() will NOT return false if the site with $main_site_id
+	// doesn't exist!
+	$blog_details = get_blog_details($main_site_id);
+	if (!$blog_details) { $errors->add('pre_switchover_invalid_siteid', 'Blog with ID '.$main_site_id.' not found on this multisite instance.'); }
+
+	switch_to_blog($main_site_id);
+
+	if (!is_plugin_active('page-links-to/page-links-to.php')) { $errors->add('pre_switchover_deactivated_plugin_plt', 'Page Links To plugin not activated on the Main Site.'); }
+
+	$alertpg = get_post($main_site_alertpg_id);
+	if (!$alertpg) { $errors->add('pre_switchover_invalid_alertpgid', 'Could not find page on Main Site with ID of '.$main_site_alertpg_id.'.'); }
+
+	$alertpg_redirect = get_post_meta($main_site_alertpg_id, '_links_to');
+	if (empty($alertpg_redirect)) { $errors->add('pre_switchover_missing_redirect', 'No redirect is set on the Main Site Alert Switchover Page.'); }
+
+	// Switch back the blog and finish.
+	restore_current_blog();
+
+	if (empty($errors->errors)) {
+		return false;
+	}
+	else {
+		return $errors;
+	}
+}
+
+
+/**
+ * Determine if the 'Front Page Displays' option on the Main Site
+ * is set to display the Main Site Alert Switchover page.
+ **/
+function is_main_site_homepg_switched() {
+	$is_switched = false;
+
+	$main_site_id = intval(get_theme_option('main_site_id'));
+	$main_site_alertpg_id = intval(get_theme_option('main_site_alertpg_id'));
+
+	switch_to_blog($main_site_id);
+	$front_pg_option = get_option('page_on_front');
+	if (intval($front_pg_option) == $main_site_alertpg_id) {
+		$is_switched = true;
+	}
+	restore_current_blog();
+
+	return $is_switched;
 }
 ?>
