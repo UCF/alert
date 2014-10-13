@@ -26,6 +26,9 @@ function remove_menus () {
 		__('Comments'),
 		//__('Plugins')
 	);
+	if (!is_super_admin()) {
+		$restricted[] = __('SEO');
+	}
 	end ($menu);
 	while (prev($menu)){
 		$value = explode(' ',$menu[key($menu)][0]);
