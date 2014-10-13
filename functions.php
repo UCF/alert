@@ -21,10 +21,10 @@ function remove_menus () {
 		__('Pages'),
 		__('Appearance'),
 		__('Tools'),
-		__('Users'),
-		__('Settings'),
+		//__('Users'),
+		//__('Settings'),
 		__('Comments'),
-		__('Plugins')
+		//__('Plugins')
 	);
 	end ($menu);
 	while (prev($menu)){
@@ -214,6 +214,23 @@ function switchout_main_site_homepg($activate=true) {
 	}
 
 	restore_current_blog();
+
+	// Write logs of button clickage. Note that main_site_switchover_logs
+	// is NOT stored in the theme's $theme_options.
+	$logs = get_option('main_site_switchover_logs');
+	$user = get_user_by('id', get_current_user_id());
+	$date = date('r');
+
+	$log = (object) array('user' => $user->id, 'date' => $date, 'activated' => $activate);
+
+	if (!is_array($logs) || empty($logs)) {
+		$logs = array($log);
+	}
+	else {
+		array_unshift($logs, $log);
+		$logs = array_slice($logs, 0, 15); // max 15 logs
+	}
+	update_option('main_site_switchover_logs', $logs);
 
 	// Return errors or true if everything worked
 	if (!empty($errors->errors)) {

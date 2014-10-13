@@ -72,7 +72,25 @@ define(MAIN_SITE_ID, $theme_options['main_site_id']);
 				<?php } ?>
 			</div>
 
-		<?php
+			<h3>Logs</h3>
+			<?php
+			$logs = get_option('main_site_switchover_logs');
+			if (is_array($logs) && !empty($logs)) { ?>
+				<ul>
+				<?php
+				foreach ($logs as $log) {
+					$date = strtotime($log->date);
+					$date_est = new DateTime(null, new DateTimeZone('America/New_York'));
+					$date_est->setTimestamp($date);
+				?>
+					<li><?=$date_est->format('Y/m/d g:i A')?> EST: <strong><?=get_user_by('id', $log->user)->get('user_login');?></strong> <?=$log->activated == true ? 'activated' : 'deactivated'?> switchover</li>
+				<?php } ?>
+				</ul>
+			<?php
+			} else { ?>
+			<p><em>No logs available.</em></p>
+			<?php
+			}
 		}
 		else {
 			print '<div id="message" class="error"><p><strong>Error: The Emergency Text-Only switchover cannot be performed until the following errors are fixed:</strong></p><ul>';
