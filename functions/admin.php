@@ -95,7 +95,7 @@ function create_utility_pages() {
 		'edit_others_posts', // Editor and above can access
 		'main-site-switchover',
 		'main_site_switchover_page',
-		THEME_IMG_URL.'/pegasus.png'
+		'dashicons-admin-generic'
 	);
 	add_utility_page(
 		__(THEME_OPTIONS_PAGE_TITLE),
@@ -103,7 +103,7 @@ function create_utility_pages() {
 		'edit_theme_options',
 		'theme-options',
 		'theme_options_page',
-		THEME_IMG_URL.'/pegasus.png'
+		'dashicons-editor-help'
 	);
 }
 
