@@ -318,6 +318,7 @@ class Alert extends CustomPostType {
 					'Weather Emergency' 	=> 'weather',
 					'Police Action' 		=> 'police',
 					'Update' 				=> 'update',
+					'Message'               => 'message'
 				),
 			),
 			array(
