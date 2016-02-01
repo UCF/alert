@@ -6,7 +6,7 @@ Theme that is built to fetch alert data from Roam Secure (or some other external
 (none)
 
 ## Installation Requirements
-* Set up a cron job to run functions/check-roam-secure.php.  This should be enabled even if we have automatic feed grabbing from Roam Secure turned off within the theme. 
+* For automatic feed retrieval from Roam Secure, set up a cron job to run `jobs/check-roam-secure.php` at a regular interval.  The "Enable automated retrieval of alerts" theme option will not work without this cron job set up.
 
 ## Deployment
 

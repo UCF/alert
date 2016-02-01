@@ -4,7 +4,7 @@
  * Responsible for running code that needs to be executed as wordpress is
  * initializing.  Good place to register scripts, stylesheets, theme elements,
  * etc.
- * 
+ *
  * @return void
  * @author Jared Lang
  **/
@@ -13,13 +13,13 @@ function __init__(){
 	add_theme_support('post-thumbnails');
 	register_nav_menu('header-menu', __('Header Menu'));
 	register_nav_menu('footer-menu', __('Footer Menu'));
-	
+
 	foreach(Config::$styles as $style){Config::add_css($style);}
 	foreach(Config::$scripts as $script){Config::add_script($script);}
-	
+
 	global $timer;
 	$timer = Timer::start();
-	
+
 	wp_deregister_script('l10n');
 	set_defaults_for_options();
 }
@@ -94,8 +94,11 @@ Config::$theme_settings = array(
 			'name'        => 'Enable automated retrieval of alerts',
 			'id'          => THEME_OPTIONS_NAME.'[incoming_enabled]',
 			'description' => 'Turn this option on to enable automatic incoming alert data fetching.
-							  Unchecking this box will stop automatic retrieval of data from 
-							  the Incoming Alert RSS Feed specified below.',
+							  Unchecking this box will stop automatic retrieval of data from
+							  the Incoming Alert RSS Feed specified below.<br>
+							  <strong>NOTE:</strong> a cron task must be set up to run the
+							  check-roam-secure.php script in this theme for this option to take any
+							  effect.',
 			'default' 	  => 0,
 			'choices'     => array(
 				'On'  => 1,
@@ -172,9 +175,9 @@ Config::$styles = array(
 );
 
 if ($theme_options['bootstrap_enable_responsive'] == 1) {
-	array_push(Config::$styles, 
+	array_push(Config::$styles,
 		THEME_STATIC_URL.'/bootstrap/bootstrap/css/bootstrap-responsive.css'
-	);		
+	);
 }
 
 # Only include gravity forms styles if the plugin is active
@@ -192,7 +195,7 @@ array_push(Config::$styles,
 
 # Must be loaded after style.css
 if ($theme_options['bootstrap_enable_responsive'] == 1) {
-	array_push(Config::$styles, 
+	array_push(Config::$styles,
 		THEME_URL.'/style-responsive.css'
 	);
 }
