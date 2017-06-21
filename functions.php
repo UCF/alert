@@ -50,7 +50,7 @@ function clear_rss_cache() {
 	$wpdb->query("DELETE FROM `wp_options` WHERE `option_name` LIKE ('_transient%_feed_%')");
 }
 function alert_rss_feed($for_comments) {
-	
+
 	$rss_template = get_template_directory().'/feeds/feed-alert-rss2.php';
 
 	if(get_query_var('post_type') == 'alert' and file_exists($rss_template)) {
@@ -68,8 +68,8 @@ add_action('do_feed_rss2', 'alert_rss_feed', 10, 1 );
  * Add a 'Last Modified' date column to the All Alerts display
  * in the admin.
  **/
- 
-// Override the default columns 
+
+// Override the default columns
 function edit_alert_columns() {
 	$columns = array(
 		'cb' 			=> '<input type="checkbox" />',
@@ -114,20 +114,20 @@ function sortable_alert_columns( $columns ) {
 	$columns['publish_date'] = 'publish_date';
 	return $columns;
 }
-add_action('manage_edit-alert_sortable_columns', 'sortable_alert_columns'); 
- 
- 
+add_action('manage_edit-alert_sortable_columns', 'sortable_alert_columns');
+
+
 /**
  * Prevent Wordpress from trying to redirect to a "loose match" post when
  * an invalid URL is requested.  WordPress will redirect to 404.php instead.
  *
  * See http://wordpress.stackexchange.com/questions/3326/301-redirect-instead-of-404-when-url-is-a-prefix-of-a-post-or-page-name
- **/ 
+ **/
 function no_redirect_on_404($redirect_url) {
-    if (is_404()) {
-        return false;
-    }
-    return $redirect_url;
+	if (is_404()) {
+		return false;
+	}
+	return $redirect_url;
 }
 add_filter('redirect_canonical', 'no_redirect_on_404');
 
@@ -140,25 +140,25 @@ add_filter('redirect_canonical', 'no_redirect_on_404');
  * http://core.trac.wordpress.org/ticket/18505
  **/
 function allow_empty_rss() {
-    global $wp_query;
+	global $wp_query;
 
-    if (is_feed()) {
-        status_header(200);
-        $wp_query->is_404 = false;
-    }
-} 
-add_filter('template_redirect', 'allow_empty_rss'); 
+	if (is_feed()) {
+		status_header(200);
+		$wp_query->is_404 = false;
+	}
+}
+add_filter('template_redirect', 'allow_empty_rss');
 
 
 /**
  * Add ID attribute to registered University Header script.
  **/
 function add_id_to_ucfhb($url) {
-    if ( (false !== strpos($url, 'bar/js/university-header.js')) || (false !== strpos($url, 'bar/js/university-header-full.js')) ) {
-      remove_filter('clean_url', 'add_id_to_ucfhb', 10, 3);
-      return "$url' id='ucfhb-script";
-    }
-    return $url;
+	if ( (false !== strpos($url, 'bar/js/university-header.js')) || (false !== strpos($url, 'bar/js/university-header-full.js')) ) {
+	  remove_filter('clean_url', 'add_id_to_ucfhb', 10, 3);
+	  return "$url' id='ucfhb-script";
+	}
+	return $url;
 }
 add_filter('clean_url', 'add_id_to_ucfhb', 10, 3);
 
@@ -310,4 +310,14 @@ function is_main_site_homepg_switched() {
 
 	return $is_switched;
 }
-?>
+
+
+/**
+ * Add CORS support for the RSS feed.
+ **/
+function add_header_origin() {
+	if ( is_feed() ) {
+		header( 'Access-Control-Allow-Origin: *' );
+	}
+}
+add_action( 'pre_get_posts', 'add_header_origin' );
