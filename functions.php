@@ -283,13 +283,8 @@ function pre_main_site_switchover_errors() {
 
 	switch_to_blog($main_site_id);
 
-	if (!is_plugin_active('page-links-to/page-links-to.php')) { $errors->add('pre_switchover_deactivated_plugin_plt', 'Page Links To plugin not activated on the Main Site.'); }
-
 	$alertpg = get_post($main_site_alertpg_id);
 	if (!$alertpg) { $errors->add('pre_switchover_invalid_alertpgid', 'Could not find page on Main Site with ID of '.$main_site_alertpg_id.'.'); }
-
-	$alertpg_redirect = get_post_meta($main_site_alertpg_id, '_links_to');
-	if (empty($alertpg_redirect)) { $errors->add('pre_switchover_missing_redirect', 'No redirect is set on the Main Site Alert Switchover Page.'); }
 
 	// Switch back the blog and finish.
 	restore_current_blog();
