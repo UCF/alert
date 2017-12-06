@@ -6,7 +6,7 @@ define(MAIN_SITE_ID, $theme_options['main_site_id']);
     <?php settings_fields(THEME_OPTIONS_GROUP);?>
 	<div class="container">
 		<h2>Emergency Text-Only Main Site Switchover</h2>
-		
+
 		<?php
 		// Check for any possible configuration errors with the
 		// Main Site before allowing the user to perform activation/
@@ -14,7 +14,7 @@ define(MAIN_SITE_ID, $theme_options['main_site_id']);
 		$errors = pre_main_site_switchover_errors();
 
 		if (!$errors) {
-			if ($_POST['submit-button']) {
+			if ( isset( $_POST['submit-button'] ) ) {
 				if ($_POST['submit-button'] == 'Activate') {
 					$switch = switchout_main_site_homepg();
 					if ($switch) {
@@ -45,7 +45,7 @@ define(MAIN_SITE_ID, $theme_options['main_site_id']);
 
 			$homepg_is_switched = is_main_site_homepg_switched();
 			?>
-			
+
 			<div class="well">
 				<p>Current status: <?=$homepg_is_switched ? '<span class="activated">Activated</span>' : '<span class="deactivated">Deactivated</span>'?></p>
 			</div>
@@ -61,7 +61,7 @@ define(MAIN_SITE_ID, $theme_options['main_site_id']);
 			</p>
 			<p>
 				This action will take effect immediately.  <strong>Do not click the button below unless there
-				is an actual emergency, or you are performing official university emergency response tests.</strong> 
+				is an actual emergency, or you are performing official university emergency response tests.</strong>
 			</p>
 
 			<div class="submit">

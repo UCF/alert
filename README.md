@@ -3,7 +3,7 @@
 Theme that is built to fetch alert data from Roam Secure (or some other external source), create editable post data in WordPress, and generate a new feed for use by ucf.edu.
 
 ## Required Plugins
-(none)
+* Redirection
 
 ## Installation Requirements
 * For automatic feed retrieval from Roam Secure, set up a cron job to run `jobs/check-roam-secure.php` at a regular interval.  The "Enable automated retrieval of alerts" theme option will not work without this cron job set up.
