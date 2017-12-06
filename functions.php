@@ -187,12 +187,24 @@ function switchout_main_site_homepg($activate=true) {
 
 	// Set the home page
 	if ($activate == true) {
+		$last_page_on_front = get_option( 'page_on_front' );
+		$last_show_on_front = get_option( 'show_on_front' );
+
+		set_transient( 'last_page_on_front', $last_page_on_front );
+		set_transient( 'last_show_on_front', $last_show_on_front );
+
 		$page_on_front = update_option('page_on_front', $main_site_alertpg_id);
 		$show_on_front = update_option('show_on_front', 'page');
 	}
 	else {
-		$page_on_front = update_option('page_on_front', '0');
-		$show_on_front = update_option('show_on_front', 'posts');
+		$last_page_on_front = get_transient( 'last_page_on_front' );
+		$last_show_on_front = get_transient( 'last_show_on_front' );
+
+		$last_page_on_front = $last_page_on_front ?: '0';
+		$last_show_on_front = $last_show_on_front ?: 'posts';
+
+		$page_on_front = update_option( 'page_on_front', $last_page_on_front );
+		$show_on_front = update_option( 'show_on_front', $last_show_on_front );
 	}
 	if (!$page_on_front) { $errors->add('switchover_update_pof_failed', 'update_option(\'page_on_front\') failed!'); }
 	if (!$show_on_front) { $errors->add('switchover_update_sof_failed', 'update_option(\'show_on_front\') failed!'); }
@@ -271,13 +283,8 @@ function pre_main_site_switchover_errors() {
 
 	switch_to_blog($main_site_id);
 
-	if (!is_plugin_active('page-links-to/page-links-to.php')) { $errors->add('pre_switchover_deactivated_plugin_plt', 'Page Links To plugin not activated on the Main Site.'); }
-
 	$alertpg = get_post($main_site_alertpg_id);
 	if (!$alertpg) { $errors->add('pre_switchover_invalid_alertpgid', 'Could not find page on Main Site with ID of '.$main_site_alertpg_id.'.'); }
-
-	$alertpg_redirect = get_post_meta($main_site_alertpg_id, '_links_to');
-	if (empty($alertpg_redirect)) { $errors->add('pre_switchover_missing_redirect', 'No redirect is set on the Main Site Alert Switchover Page.'); }
 
 	// Switch back the blog and finish.
 	restore_current_blog();
