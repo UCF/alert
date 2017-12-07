@@ -324,9 +324,11 @@ function is_main_site_homepg_switched() {
 
 	switch_to_blog( $main_site_id );
 
-	$main_site_rd_group = Red_Group::get( $main_site_rd_group_id );
-	if ( $main_site_rd_group->is_enabled() ) {
-		$is_switched = true;
+	if ( class_exists( 'Red_Group' ) ) {
+		$main_site_rd_group = Red_Group::get( $main_site_rd_group_id );
+		if ( $main_site_rd_group->is_enabled() ) {
+			$is_switched = true;
+		}
 	}
 
 	restore_current_blog();
