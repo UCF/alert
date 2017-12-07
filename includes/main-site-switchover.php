@@ -56,8 +56,8 @@ define(MAIN_SITE_ID, $theme_options['main_site_id']);
 				to its normal home page.
 			</p>
 			<?php
-			$do_ban = filter_var( $theme_options['main_site_homepg_switchout_ban'], FILTER_VALIDATE_BOOLEAN );
-			if ( $do_ban ) :
+			$do_main_site_ban = filter_var( $theme_options['main_site_homepg_switchout_ban'], FILTER_VALIDATE_BOOLEAN );
+			if ( $do_main_site_ban ) :
 			?>
 			<p>
 				Any time this toggle is switched, the home page cache of ucf.edu is removed (banned) to prevent
