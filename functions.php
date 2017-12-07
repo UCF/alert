@@ -173,41 +173,29 @@ function get_theme_option($key) {
 
 
 /**
- * Update the Main Site's home page to use the alert site's content.
- * Setting $activate to false will restore the Main Site to display
- * latest posts (which returns the correct home.php template.)
+ * Update the Main Site to redirect using the Redirection plugin group defined
+ * in theme options.
+ * Setting $activate to false will deactivate the Redirection group.
  **/
-function switchout_main_site_homepg($activate=true) {
+function switchout_main_site_homepg( $activate=true ) {
 	$errors = new WP_Error();
 
-	$main_site_id = intval(get_theme_option('main_site_id'));
-	$main_site_alertpg_id = intval(get_theme_option('main_site_alertpg_id'));
+	$main_site_id          = intval( get_theme_option( 'main_site_id' ) );
+	$main_site_rd_group_id = intval( get_theme_option( 'main_site_rd_group_id' ) );
 
-	switch_to_blog($main_site_id);
+	switch_to_blog( $main_site_id );
 
-	// Set the home page
-	if ($activate == true) {
-		$last_page_on_front = get_option( 'page_on_front' );
-		$last_show_on_front = get_option( 'show_on_front' );
+	$main_site_rd_group = Red_Group::get( $main_site_rd_group_id );
 
-		set_transient( 'last_page_on_front', $last_page_on_front );
-		set_transient( 'last_show_on_front', $last_show_on_front );
-
-		$page_on_front = update_option('page_on_front', $main_site_alertpg_id);
-		$show_on_front = update_option('show_on_front', 'page');
+	// Activate the redirect group and its child redirects
+	if ( $activate == true ) {
+		// Activate the redirection plugin group with ID $main_site_rd_group_id.
+		$main_site_rd_group->enable();
 	}
 	else {
-		$last_page_on_front = get_transient( 'last_page_on_front' );
-		$last_show_on_front = get_transient( 'last_show_on_front' );
-
-		$last_page_on_front = $last_page_on_front ?: '0';
-		$last_show_on_front = $last_show_on_front ?: 'posts';
-
-		$page_on_front = update_option( 'page_on_front', $last_page_on_front );
-		$show_on_front = update_option( 'show_on_front', $last_show_on_front );
+		// Deactivate the redirection plugin group and its child redirects
+		$main_site_rd_group->disable();
 	}
-	if (!$page_on_front) { $errors->add('switchover_update_pof_failed', 'update_option(\'page_on_front\') failed!'); }
-	if (!$show_on_front) { $errors->add('switchover_update_sof_failed', 'update_option(\'show_on_front\') failed!'); }
 
 	// Run a ban on the home page if VDP plugin is activated on Main Site
 	if (is_plugin_active('varnish-dependency-purge/varnish-dependency-purge.php')) {
@@ -258,9 +246,13 @@ function switchout_main_site_homepg($activate=true) {
 
 
 /**
- * Perform a series of checks to make sure the Main Site on this
- * multisite instance exists, has all necessary plugins installed,
- * and has a page with the ID we specify in this site's theme options.
+ * Perform a series of checks to make sure that:
+ * - The main site on this multisite instance exists,
+ * - The alert site has all necessary plugins installed,
+ * - The main site has all necessary plugins installed,
+ * - The main site has a Redirection group saved with the ID specified in this
+ *   theme's theme options,
+ * - The Redirection group on the main site has at least one redirect defined.
  *
  * If everything looks valid, this function returns false.  Otherwise,
  * a WP_Error object is returned with relevant errors.
@@ -270,31 +262,49 @@ function pre_main_site_switchover_errors() {
 
 	// Get the Main Site ID and the ID of the page to switch to set in Theme Options.
 	// If one of these is not set, return now with an error.
-	$main_site_id = intval(get_theme_option('main_site_id'));
-	$main_site_alertpg_id = intval(get_theme_option('main_site_alertpg_id'));
-	if (!$main_site_id) { $errors->add('pre_switchover_no_siteid', 'Main Site ID is not set in Theme Options.'); }
-	if (!$main_site_alertpg_id) { $errors->add('pre_switchover_no_alertpgid', 'Main Site Alert Switchover Page ID is not set in Theme Options.'); }
+	$main_site_id = intval( get_theme_option( 'main_site_id' ) );
+	$main_site_rd_group_id = intval( get_theme_option( 'main_site_rd_group_id' ) );
+	if ( !$main_site_id ) { $errors->add( 'pre_switchover_no_siteid', 'Main Site ID is not set in Theme Options.' ); }
+	if ( !$main_site_rd_group_id ) { $errors->add( 'pre_switchover_no_rd_groupid', 'Main Site Redirection Group ID is not set in Theme Options.' ); }
 
 	// Make sure the site with the given ID exists before switching.
 	// switch_to_blog() will NOT return false if the site with $main_site_id
 	// doesn't exist!
-	$blog_details = get_blog_details($main_site_id);
-	if (!$blog_details) { $errors->add('pre_switchover_invalid_siteid', 'Blog with ID '.$main_site_id.' not found on this multisite instance.'); }
+	$blog_details = get_blog_details( $main_site_id );
+	if ( !$blog_details ) { $errors->add( 'pre_switchover_invalid_siteid', 'Blog with ID ' . $main_site_id . ' not found on this multisite instance.' ); }
 
-	switch_to_blog($main_site_id);
+	// Make sure required plugins are activated on the alert site
+	if ( !is_plugin_active( 'redirection/redirection.php' ) || !class_exists( 'Red_Group' ) ) {
+		$errors->add( 'pre_switchover_deactivated_plugin_alert_rd', 'Redirection plugin not activated on the Alert Site.' );
+	}
 
-	if (!is_plugin_active('page-links-to/page-links-to.php')) { $errors->add('pre_switchover_deactivated_plugin_plt', 'Page Links To plugin not activated on the Main Site.'); }
+	switch_to_blog( $main_site_id );
 
-	$alertpg = get_post($main_site_alertpg_id);
-	if (!$alertpg) { $errors->add('pre_switchover_invalid_alertpgid', 'Could not find page on Main Site with ID of '.$main_site_alertpg_id.'.'); }
+	// Make sure required plugins are activated on the main site
+	if ( !is_plugin_active( 'redirection/redirection.php' ) ) {
+		$errors->add( 'pre_switchover_deactivated_plugin_ms_rd', 'Redirection plugin not activated on the Main Site.' );
+	}
 
-	$alertpg_redirect = get_post_meta($main_site_alertpg_id, '_links_to');
-	if (empty($alertpg_redirect)) { $errors->add('pre_switchover_missing_redirect', 'No redirect is set on the Main Site Alert Switchover Page.'); }
+	// Check for a Redirection group with the ID set in theme options
+	$main_site_rd_group = false;
+	if ( class_exists( 'Red_Group' ) ) {
+		$main_site_rd_group = Red_Group::get( $main_site_rd_group_id );
+	}
+	if ( !$main_site_rd_group ) {
+		$errors->add( 'pre_switchover_no_rd_group', 'Main Site Redirection Group with ID ' . $main_site_rd_group_id . ' not found on the Main Site.' );
+	}
+	else {
+		// Check for at least one redirect rule defined in the group set in theme options
+		$main_site_rd_group_count = $main_site_rd_group->get_total_redirects();
+		if ( intval( $main_site_rd_group_count ) < 1 ) {
+			$errors->add( 'pre_switchover_no_rd_group_redirects', 'The Main Site Redirection Group with ID ' . $main_site_rd_group_id . ' does not have at least one redirect rule defined.' );
+		}
+	}
 
 	// Switch back the blog and finish.
 	restore_current_blog();
 
-	if (empty($errors->errors)) {
+	if ( empty( $errors->errors ) ) {
 		return false;
 	}
 	else {
@@ -304,20 +314,23 @@ function pre_main_site_switchover_errors() {
 
 
 /**
- * Determine if the 'Front Page Displays' option on the Main Site
- * is set to display the Main Site Alert Switchover page.
+ * Determine if the Main Site's alert redirects are enabled.
  **/
 function is_main_site_homepg_switched() {
 	$is_switched = false;
 
-	$main_site_id = intval(get_theme_option('main_site_id'));
-	$main_site_alertpg_id = intval(get_theme_option('main_site_alertpg_id'));
+	$main_site_id          = intval( get_theme_option( 'main_site_id' ) );
+	$main_site_rd_group_id = intval( get_theme_option( 'main_site_rd_group_id' ) );
 
-	switch_to_blog($main_site_id);
-	$front_pg_option = get_option('page_on_front');
-	if (intval($front_pg_option) == $main_site_alertpg_id) {
-		$is_switched = true;
+	switch_to_blog( $main_site_id );
+
+	if ( class_exists( 'Red_Group' ) ) {
+		$main_site_rd_group = Red_Group::get( $main_site_rd_group_id );
+		if ( $main_site_rd_group->is_enabled() ) {
+			$is_switched = true;
+		}
 	}
+
 	restore_current_blog();
 
 	return $is_switched;

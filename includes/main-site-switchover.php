@@ -14,7 +14,7 @@ define(MAIN_SITE_ID, $theme_options['main_site_id']);
 		$errors = pre_main_site_switchover_errors();
 
 		if (!$errors) {
-			if ($_POST['submit-button']) {
+			if ( isset( $_POST['submit-button'] ) ) {
 				if ($_POST['submit-button'] == 'Activate') {
 					$switch = switchout_main_site_homepg();
 					if ($switch) {
