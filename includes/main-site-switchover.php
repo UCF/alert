@@ -55,10 +55,15 @@ define(MAIN_SITE_ID, $theme_options['main_site_id']);
 				www.ucf.edu will redirect to www.ucf.edu/alert.  Deactivating this switch will return ucf.edu
 				to its normal home page.
 			</p>
+			<?php
+			$do_main_site_ban = filter_var( $theme_options['main_site_homepg_switchout_ban'], FILTER_VALIDATE_BOOLEAN );
+			if ( $do_main_site_ban ) :
+			?>
 			<p>
 				Any time this toggle is switched, the home page cache of ucf.edu is removed (banned) to prevent
 				stale content from displaying and to ensure the switchover takes effect immediately.
 			</p>
+			<?php endif; ?>
 			<p>
 				This action will take effect immediately.  <strong>Do not click the button below unless there
 				is an actual emergency, or you are performing official university emergency response tests.</strong>
