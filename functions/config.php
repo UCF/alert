@@ -145,6 +145,23 @@ Config::$theme_settings = array(
 			'default'     => '1',
 			'value'       => $theme_options['main_site_alertpg_id'],
 		)),
+		new RadioField(array(
+			'name'        => 'Try to Clear Cache on Main Site Homepage upon Switchover Activation/Deactivation',
+			'id'          => THEME_OPTIONS_NAME.'[main_site_homepg_switchout_ban]',
+			'description' => 'Turn this option on to allow the Main Site\'s homepage to be
+							  updated programmatically when the Main Site Switchover is
+							  activated or deactivated. Doing so should trigger a cache
+							  ban/purge on most cache-related plugins. Note that this will
+							  fail if the Main Site is not configured to display a static
+							  page as the front page (is set to display "latest posts"
+							  in Settings > Reading).',
+			'default' 	  => 1,
+			'choices'     => array(
+				'On'  => 1,
+				'Off' => 0,
+			),
+			'value'       => $theme_options['main_site_homepg_switchout_ban'],
+		)),
 	),
 	'Styles' => array(
 		new RadioField(array(
