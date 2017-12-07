@@ -197,22 +197,14 @@ function switchout_main_site_homepg( $activate=true ) {
 		$main_site_rd_group->disable();
 	}
 
-	// Run a ban on the home page if VDP plugin is activated on Main Site
-	if (is_plugin_active('varnish-dependency-purge/varnish-dependency-purge.php')) {
-		$ban_url = '/';
-
-		// $vdp variable should already be available by this point,
-		// but create it in case it's not
-		$ms_vdp = new VDP();
-		$nodes = $ms_vdp->parse_varnish_nodes();
-
-		if ($nodes) {
-			foreach ($nodes as $node) {
-				$node->ban($ban_url);
-			}
-		}
-		else {
-			$errors->add('switchover_missing_vdp_nodes', 'VDP plugin is activated on Main Site, but varnish nodes are not set!');
+	// Force an update on the main site homepage to trigger cache updates
+	// if enabled
+	$do_main_site_ban = filter_var( get_theme_option( 'main_site_homepg_switchout_ban' ), FILTER_VALIDATE_BOOLEAN );
+	$main_site_homepg = get_post( intval( get_option( 'page_on_front' ) ) );
+	if ( $do_main_site_ban && $main_site_homepg instanceof WP_Post ) {
+		$main_site_homepg_update = wp_update_post( array( 'ID' => $main_site_homepg->ID ), true );
+		if ( is_wp_error( $main_site_homepg_update ) ) {
+			$errors = $main_site_homepg_update;
 		}
 	}
 
