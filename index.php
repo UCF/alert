@@ -42,7 +42,7 @@
 		<div class="about">
 			<h3>About this Page</h3>
 			<p>
-				This page is the official source of alert information for the University of Central Florida. In the event of an emergency, check this page for updated information. This page is updated and maintained by the Office of News and Information.
+				This page is the official source of alert information for the University of Central Florida. In the event of an emergency, check this page for updated information. This page is updated and maintained by UCF Communications.
 			</p>
 		</div>
 		<hr />
