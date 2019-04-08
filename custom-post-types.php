@@ -1,11 +1,11 @@
 <?php
 
 /**
- * Abstract class for defining custom post types.  
- * 
+ * Abstract class for defining custom post types.
+ *
  **/
 abstract class CustomPostType{
-	public 
+	public
 		$name           = 'custom_post_type',
 		$plural_name    = 'Custom Posts',
 		$singular_name  = 'Custom Post',
@@ -27,8 +27,8 @@ abstract class CustomPostType{
 		# Optional default ordering for generic shortcode if not specified by user.
 		$default_orderby = null,
 		$default_order   = null;
-	
-	
+
+
 	/**
 	 * Wrapper for get_posts function, that predefines post_type for this
 	 * custom post type.  Any options valid in get_posts can be passed as an
@@ -46,8 +46,8 @@ abstract class CustomPostType{
 		$objects = get_posts($options);
 		return $objects;
 	}
-	
-	
+
+
 	/**
 	 * Similar to get_objects, but returns array of key values mapping post
 	 * title to id if available, otherwise it defaults to id=>id.
@@ -67,8 +67,8 @@ abstract class CustomPostType{
 		}
 		return $opt;
 	}
-	
-	
+
+
 	/**
 	 * Return the instances values defined by $key.
 	 **/
@@ -76,8 +76,8 @@ abstract class CustomPostType{
 		$vars = get_object_vars($this);
 		return $vars[$key];
 	}
-	
-	
+
+
 	/**
 	 * Additional fields on a custom post type may be defined by overriding this
 	 * method on an descendant object.
@@ -85,8 +85,8 @@ abstract class CustomPostType{
 	public function fields(){
 		return array();
 	}
-	
-	
+
+
 	/**
 	 * Using instance variables defined, returns an array defining what this
 	 * custom post type supports.
@@ -111,8 +111,8 @@ abstract class CustomPostType{
 		}
 		return $supports;
 	}
-	
-	
+
+
 	/**
 	 * Creates labels array, defining names for admin panel.
 	 **/
@@ -125,8 +125,8 @@ abstract class CustomPostType{
 			'new_item'      => __($this->options('new_item')),
 		);
 	}
-	
-	
+
+
 	/**
 	 * Creates metabox array for custom post type. Override method in
 	 * descendants to add or modify metaboxes.
@@ -144,8 +144,8 @@ abstract class CustomPostType{
 		}
 		return null;
 	}
-	
-	
+
+
 	/**
 	 * Registers metaboxes defined for custom post type.
 	 **/
@@ -162,8 +162,8 @@ abstract class CustomPostType{
 			);
 		}
 	}
-	
-	
+
+
 	/**
 	 * Registers the custom post type and any other ancillary actions that are
 	 * required for the post to function properly.
@@ -176,19 +176,19 @@ abstract class CustomPostType{
 			'taxonomies' => $this->options('taxonomies'),
 			'_builtin'   => $this->options('built_in')
 		);
-		
+
 		if ($this->options('use_order')){
 			$registration = array_merge($registration, array('hierarchical' => True,));
 		}
-		
+
 		register_post_type($this->options('name'), $registration);
-		
+
 		if ($this->options('use_shortcode')){
 			add_shortcode($this->options('name').'-list', array($this, 'shortcode'));
 		}
 	}
-	
-	
+
+
 	/**
 	 * Shortcode for this custom post type.  Can be overridden for descendants.
 	 * Defaults to just outputting a list of objects outputted as defined by
@@ -205,8 +205,8 @@ abstract class CustomPostType{
 		}
 		return sc_object_list($attr);
 	}
-	
-	
+
+
 	/**
 	 * Handles output for a list of objects, can be overridden for descendants.
 	 * If you want to override how a list of objects are outputted, override
@@ -215,10 +215,10 @@ abstract class CustomPostType{
 	 **/
 	public function objectsToHTML($objects, $css_classes){
 		if (count($objects) < 1){ return '';}
-		
+
 		$class = get_custom_post_type($objects[0]->post_type);
 		$class = new $class;
-		
+
 		ob_start();
 		?>
 		<ul class="<?php if($css_classes):?><?=$css_classes?><?php else:?><?=$class->options('name')?>-list<?php endif;?>">
@@ -232,8 +232,8 @@ abstract class CustomPostType{
 		$html = ob_get_clean();
 		return $html;
 	}
-	
-	
+
+
 	/**
 	 * Outputs this item in HTML.  Can be overridden for descendants.
 	 **/
@@ -244,7 +244,7 @@ abstract class CustomPostType{
 }
 
 class ContactInformation extends CustomPostType {
-	public 
+	public
 		$name           = 'contact_information',
 		$plural_name    = 'Contact Information',
 		$singular_name  = 'Contact Information',
@@ -272,7 +272,7 @@ class ContactInformation extends CustomPostType {
 }
 
 class Alert extends CustomPostType {
-	public 
+	public
 		$name           = 'alert',
 		$plural_name    = 'Alerts',
 		$singular_name  = 'Alert',
@@ -291,25 +291,42 @@ class Alert extends CustomPostType {
 		$prefix = $this->options('name').'_';
 		return array(
 			array(
-				'name' => 'UCF.edu Alert Text',
-				'desc' => 
-					'The text for the alert that is displayed on www.ucf.edu. 
-					When automatic alert fetching is enabled, this text is 
-					supplied by Roam Secure. 
+				'name' => 'Alert Text',
+				'desc' =>
+					'The text for the alert that is displayed on www.ucf.edu.
+					When automatic alert fetching is enabled, this text is
+					supplied by Roam Secure.
 					<br />
-					Word count is determined by the Alert Text Length value 
+					Word count is determined by the Alert Text Length value
 					in Theme Options.
 					<br />
-					<strong>This field must have some content for the alert to 
+					<strong>This field must have some content for the alert to
 					appear on www.ucf.edu. Leaving it blank will disable the alert.
 					</strong>',
 				'id'   => $prefix.'short',
 				'type' => 'textarea'
 			),
 			array(
+				'name' => 'Alert Call-to-Action Text',
+				'desc' =>
+					'Call-to-action displayed under the alert text that encourages users to click the alert.',
+				'id'   => $prefix.'cta',
+				'type' => 'text',
+				'std' => 'More Information',
+			),
+			array(
+				'name' => 'Alert URL',
+				'desc' =>
+					'Where users should be directed when this alert is clicked.
+					<br>
+					If this value is left blank, users will be directed to the UCF Alert homepage.',
+				'id'   => $prefix.'url',
+				'type' => 'text'
+			),
+			array(
 				'name' => 'Type of Alert',
-				'desc' => 
-					'Specify what type of alert this is. Determines the type 
+				'desc' =>
+					'Specify what type of alert this is. Determines the type
 					of icon that appears for the alert on www.ucf.edu.',
 				'id'   => $prefix.'alert_type',
 				'type' => 'select',
@@ -323,8 +340,8 @@ class Alert extends CustomPostType {
 			),
 			array(
 				'name' => 'Alert Expiration',
-				'desc' => 
-					'The amount of time, in hours, before the alert is removed 
+				'desc' =>
+					'The amount of time, in hours, before the alert is removed
 					from the main alert feed and from UCF.edu.<br/>
 					Default is one hour.',
 				'id'   => $prefix.'expiration',

@@ -64,6 +64,7 @@ echo '<?xml version="1.0" encoding="'.get_option('blog_charset').'"?'.'>'; ?>
 				<link><?php the_permalink_rss() ?></link>
 				<postID><?php echo $post->ID; ?></postID>
 				<alertType><?php $alert_type = get_post_meta($post->ID, 'alert_alert_type', True) ? get_post_meta($post->ID, 'alert_alert_type', True) : 'general'; echo $alert_type; ?></alertType>
+				<cta><?php echo ( get_post_meta( $post->ID, 'alert_cta', true ) ) ?: 'More Information'; ?></cta>
 				<pubDate><?php echo mysql2date('D, d M Y H:i:s +0000', get_post_time('Y-m-d H:i:s', true), false); ?></pubDate>
 				<dc:creator><?php the_author() ?></dc:creator>
 				<?php the_category_rss('rss2') ?>
