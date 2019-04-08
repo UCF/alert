@@ -4,7 +4,7 @@
  *
  * @package WordPress
  */
- 
+
 header('Content-Type: ' . feed_content_type('rss-http') . '; charset=' . get_option('blog_charset'), true);
 $more = 1;
 
@@ -28,11 +28,11 @@ echo '<?xml version="1.0" encoding="'.get_option('blog_charset').'"?'.'>'; ?>
 	<lastBuildDate><?php echo mysql2date('D, d M Y H:i:s +0000', get_lastpostmodified('GMT'), false); ?></lastBuildDate>
 	<language><?php bloginfo_rss( 'language' ); ?></language>
 	<?php do_action('rss2_head'); ?>
-	
-	<?php 
+
+	<?php
 	$theme_options    = get_option(THEME_OPTIONS_NAME);
 	$def_alert_length = $theme_options['outgoing_text_length'] ? (int)$theme_options['outgoing_text_length'] : 350;
-	
+
 	// We only want to display the most recent active alert
 	// at any given time.
 	$args = array(
@@ -41,18 +41,18 @@ echo '<?xml version="1.0" encoding="'.get_option('blog_charset').'"?'.'>'; ?>
 		'orderby'			=> 'modified',
 		'order'				=> 'DESC',
 	);
-	
+
 	$posts = get_posts($args);
 	$post = $posts[0];
-	
+
 	$expiration = get_post_meta($post->ID, 'alert_expiration', True) ? (int)get_post_meta($post->ID, 'alert_expiration', True) : 1;
-	
+
 	if ( date('YmdHis', strtotime($post->post_modified)) >= date('YmdHis', strtotime('-'.$expiration.' hours')) ) {
 		$short = get_post_meta($post->ID, 'alert_short', True);
-		if($short != '') {			
+		if($short != '') {
 			// We only want to truncate to the max alert length if the actual alert
 			// text length exceeds that max value.
-			$needs_truncating = $def_alert_length < strlen($short) ? true : false; 
+			$needs_truncating = $def_alert_length < strlen($short) ? true : false;
 			// Truncate by text length, then remove the last full/partial word
 			if ($needs_truncating == true) {
 				$short = substr($short, 0, $def_alert_length);
@@ -61,32 +61,33 @@ echo '<?xml version="1.0" encoding="'.get_option('blog_charset').'"?'.'>'; ?>
 	?>
 			<item>
 				<title><?php the_title_rss() ?></title>
-				<link><?php the_permalink_rss() ?></link>
+				<link><?php echo ( get_post_meta( $post->ID, 'alert_url', true ) ) ?: home_url() ?></link>
 				<postID><?php echo $post->ID; ?></postID>
 				<alertType><?php $alert_type = get_post_meta($post->ID, 'alert_alert_type', True) ? get_post_meta($post->ID, 'alert_alert_type', True) : 'general'; echo $alert_type; ?></alertType>
-				<comments><?php comments_link_feed(); ?></comments>
+				<cta><?php echo ( get_post_meta( $post->ID, 'alert_cta', true ) ) ?: 'More Information'; ?></cta>
 				<pubDate><?php echo mysql2date('D, d M Y H:i:s +0000', get_post_time('Y-m-d H:i:s', true), false); ?></pubDate>
 				<dc:creator><?php the_author() ?></dc:creator>
 				<?php the_category_rss('rss2') ?>
-		
+
 				<guid isPermaLink="false"><?php the_guid(); ?></guid>
-		<?php if (get_option('rss_use_excerpt')) : ?>
-				<description><![CDATA[<?php echo $short; ?>]]></description>
-		<?php else : ?>
-				<description><![CDATA[<?php echo $short; ?>]]></description>
-			<?php $content = get_the_content_feed('rss2'); ?>
-			<?php if ( strlen( $content ) > 0 ) : ?>
-				<content:encoded><![CDATA[<?php echo $content; ?>]]></content:encoded>
-			<?php else : ?>
-				<content:encoded><![CDATA[<?php the_excerpt_rss(); ?>]]></content:encoded>
-			<?php endif; ?>
-		<?php endif; ?>
-				<wfw:commentRss><?php echo esc_url( get_post_comments_feed_link(null, 'rss2') ); ?></wfw:commentRss>
-				<slash:comments><?php echo get_comments_number(); ?></slash:comments>
-		<?php rss_enclosure(); ?>
-			<?php do_action('rss2_item'); ?>
+
+				<?php if (get_option('rss_use_excerpt')) : ?>
+					<description><![CDATA[<?php echo $short; ?>]]></description>
+				<?php else : ?>
+					<description><![CDATA[<?php echo $short; ?>]]></description>
+
+					<?php $content = get_the_content_feed('rss2'); ?>
+					<?php if ( strlen( $content ) > 0 ) : ?>
+						<content:encoded><![CDATA[<?php echo $content; ?>]]></content:encoded>
+					<?php else : ?>
+						<content:encoded><![CDATA[<?php the_excerpt_rss(); ?>]]></content:encoded>
+					<?php endif; ?>
+				<?php endif; ?>
+
+				<?php rss_enclosure(); ?>
+				<?php do_action('rss2_item'); ?>
 			</item>
-	<?php 
+	<?php
 		}
 	}
 	?>
