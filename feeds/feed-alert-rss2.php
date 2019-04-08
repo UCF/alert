@@ -61,7 +61,7 @@ echo '<?xml version="1.0" encoding="'.get_option('blog_charset').'"?'.'>'; ?>
 	?>
 			<item>
 				<title><?php the_title_rss() ?></title>
-				<link><?php the_permalink_rss() ?></link>
+				<link><?php echo ( get_post_meta( $post->ID, 'alert_url', true ) ) ?: home_url() ?></link>
 				<postID><?php echo $post->ID; ?></postID>
 				<alertType><?php $alert_type = get_post_meta($post->ID, 'alert_alert_type', True) ? get_post_meta($post->ID, 'alert_alert_type', True) : 'general'; echo $alert_type; ?></alertType>
 				<cta><?php echo ( get_post_meta( $post->ID, 'alert_cta', true ) ) ?: 'More Information'; ?></cta>
