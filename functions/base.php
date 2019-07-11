@@ -705,10 +705,10 @@ function get_image_choices(){
 	);
 
 	$attachments = get_posts($args);
-	$attachments = array_filter($attachments, create_function('$a', '
+	$attachments = array_filter($attachments, function( $a ) {
 		$is_image = (strpos($a->post_mime_type, "image/") !== False);
 		return $is_image;
-	'));
+	});
 	foreach($attachments as $image){
 		$filename = basename(get_attached_file($image->ID));
 		$value    = $image->ID;
