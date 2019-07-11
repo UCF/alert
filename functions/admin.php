@@ -89,7 +89,7 @@ function init_theme_options(){
  * @author Jared Lang
  **/
 function create_utility_pages() {
-	add_utility_page(
+	add_menu_page(
 		__('Text-Only Main Site'),
 		__('Text-Only Main Site Switchover'),
 		'edit_others_posts', // Editor and above can access
@@ -97,7 +97,8 @@ function create_utility_pages() {
 		'main_site_switchover_page',
 		'dashicons-admin-generic'
 	);
-	add_utility_page(
+
+	add_menu_page(
 		__(THEME_OPTIONS_PAGE_TITLE),
 		__(THEME_OPTIONS_PAGE_TITLE),
 		'edit_theme_options',

@@ -14,18 +14,26 @@ function __init__(){
 	register_nav_menu('header-menu', __('Header Menu'));
 	register_nav_menu('footer-menu', __('Footer Menu'));
 
-	foreach(Config::$styles as $style){Config::add_css($style);}
-	foreach(Config::$scripts as $script){Config::add_script($script);}
-
 	global $timer;
 	$timer = Timer::start();
 
-	wp_deregister_script('l10n');
 	set_defaults_for_options();
 }
 add_action('after_setup_theme', '__init__');
 
+function alert_add_scripts() {
+	foreach( Config::$styles as $style ) {
+		Config::add_css( $style );
+	}
 
+	foreach( Config::$scripts as $script ) {
+		Config::add_script( $script );
+	}
+
+	wp_deregister_script('l10n');
+}
+
+add_action( 'wp_enqueue_scripts', 'alert_add_scripts' );
 
 # Set theme constants
 #define('DEBUG', True);                  # Always on
@@ -44,9 +52,9 @@ define('THEME_OPTIONS_NAME', 'theme');
 define('THEME_OPTIONS_PAGE_TITLE', 'Theme Options');
 
 $theme_options = get_option(THEME_OPTIONS_NAME);
-define('GA_ACCOUNT', $theme_options['ga_account']);
-define('CB_UID', $theme_options['cb_uid']);
-define('CB_DOMAIN', $theme_options['cb_domain']);
+define('GA_ACCOUNT', isset( $theme_options['ga_account'] ) ? $theme_options['ga_account'] : null );
+define('CB_UID', isset ( $theme_options['cb_uid'] ) ? $theme_options['cb_uid'] : null );
+define('CB_DOMAIN', isset( $theme_options['cb_domain'] ) ? $theme_options['cb_domain'] : null );
 
 define('ROAM_SECURE_RSS_URL', 'https://alert.ucf.edu/rssfeed.php');
 
@@ -79,14 +87,14 @@ Config::$theme_settings = array(
 			'id'          => THEME_OPTIONS_NAME.'[gw_verify]',
 			'description' => 'Example: <em>9Wsa3fspoaoRE8zx8COo48-GCMdi5Kd-1qFpQTTXSIw</em>',
 			'default'     => null,
-			'value'       => $theme_options['gw_verify'],
+			'value'       => isset( $theme_options['gw_verify'] ) ? $theme_options['gw_verify'] : null,
 		)),
 		new TextField(array(
 			'name'        => 'Google Analytics Account',
 			'id'          => THEME_OPTIONS_NAME.'[ga_account]',
 			'description' => 'Example: <em>UA-9876543-21</em>. Leave blank for development.',
 			'default'     => null,
-			'value'       => $theme_options['ga_account'],
+			'value'       => isset( $theme_options['ga_account'] ) ? $theme_options['ga_account'] : null,
 		)),
 	),
 	'Incoming Alert Options' => array(
@@ -142,7 +150,7 @@ Config::$theme_settings = array(
 							 is activated. The group will be disabled upon deactivating the
 							 switchover. This setting is required for managing Main Site
 							 switchovers from this site.',
-			'value'       => $theme_options['main_site_rd_group_id'],
+			'value'       => isset( $theme_options['main_site_rd_group_id'] ) ? $theme_options['main_site_rd_group_id'] : null,
 		)),
 		new RadioField(array(
 			'name'        => 'Try to Clear Cache on Main Site Homepage upon Switchover Activation/Deactivation',
@@ -229,9 +237,9 @@ Config::$metas = array(
 	array('charset' => 'utf-8',),
 );
 
-if ($theme_options['gw_verify']){
+if ( isset( $theme_options['gw_verify'] ) && $theme_options['gw_verify'] ) {
 	Config::$metas[] = array(
 		'name'    => 'google-site-verification',
-		'content' => htmlentities($theme_options['gw_verify']),
+		'content' => htmlentities( $theme_options['gw_verify'] ),
 	);
 }
