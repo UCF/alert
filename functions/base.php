@@ -397,7 +397,7 @@ function dump(){
  * @return void
  * @author Jared Lang
  **/
-if (DEBUG){
+if (WP_DEBUG){
 	function debug($string){ /*
 		print "<!-- DEBUG: {$string} -->\n"; */
 	}
@@ -414,7 +414,7 @@ if (DEBUG){
  * @return mixed
  * @author Jared Lang
  **/
-if (DEBUG){
+if (WP_DEBUG){
 	function debug_callfunc($func, $args){
 		return call_user_func_array($func, $args);
 	}
@@ -457,7 +457,7 @@ function bootstrap_menus() {
 	class Bootstrap_Walker_Nav_Menu extends Walker_Nav_Menu {
 
 
-			function start_lvl( &$output, $depth ) {
+			function start_lvl( &$output, $depth = 0, $args = array() ) {
 
 				$indent = str_repeat( "\t", $depth );
 				$output	   .= "\n$indent<ul class=\"dropdown-menu\">\n";
@@ -1091,7 +1091,10 @@ function footer_($tabs=2){
 function opengraph_setup(){
 	$options = get_option(THEME_OPTIONS_NAME);
 
-	if (!(bool)$options['enable_og']){return;}
+	if ( ! isset( $options['enable_og'] ) || ! (bool)$options['enable_og'] ) {
+		return;
+	}
+
 	if (is_search()){return;}
 
 	global $post, $page;
@@ -1280,7 +1283,7 @@ function header_title(){
 function installed_custom_post_types(){
 	$installed = Config::$custom_post_types;
 
-	return array_map(function( $class ){
+	return array_map( function( $class ) {
 		return new $class;
 	}, $installed);
 }
@@ -1292,7 +1295,7 @@ function installed_custom_post_types(){
 function installed_custom_taxonomies(){
 	$installed = Config::$custom_taxonomies;
 
-	return array_map(function( $class ){
+	return array_map( function( $class ) {
 		return new $class;
 	}, $installed);
 }
@@ -1461,7 +1464,7 @@ function save_default($post_id, $field){
  **/
 function _save_meta_data($post_id, $meta_box){
 	// verify nonce
-	if (!wp_verify_nonce($_POST['meta_box_nonce'], basename(__FILE__))) {
+	if ( ! isset( $_POST['meta_box_nonce'] ) || ! wp_verify_nonce( $_POST['meta_box_nonce'], basename( __FILE__ ) ) ) {
 		return $post_id;
 	}
 
@@ -1560,9 +1563,9 @@ function _show_meta_boxes($post, $meta_box){
 	<?php endforeach;?>
 	</table>
 
-	<?php if($meta_box['helptxt']):?>
-	<p><?=$meta_box['helptxt']?></p>
-	<?php endif;?>
+	<?php if ( isset( $meta_box['helptxt'] ) && $meta_box['helptxt'] ) : ?>
+	<p><?php echo $meta_box['helptxt']; ?></p>
+	<?php endif; ?>
 	<?php
 }
 
