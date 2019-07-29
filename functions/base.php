@@ -1382,6 +1382,7 @@ add_action('do_meta_boxes', 'register_meta_boxes');
  * @author Jared Lang
  **/
 function save_meta_data($post){
+	$meta_box = null;
 	#Register custom post types metaboxes
 	foreach(installed_custom_post_types() as $custom_post_type){
 		if (post_type($post) == $custom_post_type->options('name')){
