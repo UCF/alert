@@ -1515,12 +1515,21 @@ function _show_meta_boxes($post, $meta_box){
 				</div>
 			<?php endif;?>
 
-			<?php switch ($field['type']):
-				case 'text':?>
-				<input type="text" name="<?=$field['id']?>" id="<?=$field['id']?>" value="<?=($current_value) ? htmlentities($current_value) : $field['std']?>" />
+			<?php
+			switch ($field['type']):
+				case 'text':
+					$default_value = isset( $field['std'] ) ? $field['std'] : '';
+					$current_value = $current_value ? htmlentities( $current_value ) : $default_value;
+			?>
+				<input type="text" name="<?=$field['id']?>" id="<?=$field['id']?>" value="<?php echo $current_value; ?>" />
 
-			<?php break; case 'textarea':?>
-				<textarea name="<?=$field['id']?>" id="<?=$field['id']?>" cols="60" rows="4"><?=($current_value) ? htmlentities($current_value) : $field['std']?></textarea>
+			<?php
+				break;
+				case 'textarea':
+					$default_value = isset( $field['std'] ) ? $field['std'] : '';
+					$current_value = $current_value ? htmlentities( $current_value ) : $default_value;
+			?>
+				<textarea name="<?=$field['id']?>" id="<?=$field['id']?>" cols="60" rows="4"><?php echo $current_value; ?></textarea>
 
 			<?php break; case 'select':?>
 				<select name="<?=$field['id']?>" id="<?=$field['id']?>">
