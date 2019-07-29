@@ -1,6 +1,5 @@
 <?php
 $theme_options = get_option(THEME_OPTIONS_NAME);
-define(MAIN_SITE_ID, $theme_options['main_site_id']);
 ?>
 <form method="post" id="main-site-switchover">
     <?php settings_fields(THEME_OPTIONS_GROUP);?>
