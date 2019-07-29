@@ -26,10 +26,6 @@
 		</script>
 		<?php endif;?>
 
-		<script type="text/javascript">
-			var PRINT_HEADER_IMG = 'http://www.ucf.edu/wp-content/themes/Main-Site-Theme/static/img/ucflogo-print.png';
-		</script>
-
 		<?php
 		if ( isset( $post ) && $post instanceof WP_Post ):
 			$post_type = get_post_type( $post->ID );
