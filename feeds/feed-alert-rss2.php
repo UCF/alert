@@ -6,6 +6,7 @@
  */
 
 header('Content-Type: ' . feed_content_type('rss-http') . '; charset=' . get_option('blog_charset'), true);
+header( 'Access-Control-Allow-Origin: *' );
 $more = 1;
 
 echo '<?xml version="1.0" encoding="'.get_option('blog_charset').'"?'.'>'; ?>
