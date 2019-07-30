@@ -327,14 +327,3 @@ function is_main_site_homepg_switched() {
 
 	return $is_switched;
 }
-
-
-/**
- * Add CORS support for the RSS feed.
- **/
-function add_header_origin() {
-	if ( is_feed() ) {
-		header( 'Access-Control-Allow-Origin: *' );
-	}
-}
-add_action( 'pre_get_posts', 'add_header_origin' );
