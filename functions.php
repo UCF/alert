@@ -212,11 +212,11 @@ function switchout_main_site_homepg( $activate=true ) {
 
 	// Write logs of button clickage. Note that main_site_switchover_logs
 	// is NOT stored in the theme's $theme_options.
-	$logs = get_option('main_site_switchover_logs');
-	$user = get_user_by('id', get_current_user_id());
-	$date = date('r');
+	$logs    = get_option('main_site_switchover_logs');
+	$user_id = get_current_user_id();
+	$date    = date('r');
 
-	$log = (object) array('user' => $user->id, 'date' => $date, 'activated' => $activate);
+	$log = (object) array('user' => $user_id, 'date' => $date, 'activated' => $activate);
 
 	if (!is_array($logs) || empty($logs)) {
 		$logs = array($log);
@@ -327,14 +327,3 @@ function is_main_site_homepg_switched() {
 
 	return $is_switched;
 }
-
-
-/**
- * Add CORS support for the RSS feed.
- **/
-function add_header_origin() {
-	if ( is_feed() ) {
-		header( 'Access-Control-Allow-Origin: *' );
-	}
-}
-add_action( 'pre_get_posts', 'add_header_origin' );
