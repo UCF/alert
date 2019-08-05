@@ -1,11 +1,12 @@
 <?php @header("HTTP/1.1 404 Not found", true, 404);?>
 <?php disallow_direct_load('404.php');?>
 
-<?php get_header(); the_post();?>
+<?php get_header(); ?>
 	<div class="row">
 		<div class="span12">
 			<h2>Page Not Found</h2>
-			<?php 
+			<?php
+				$content = '';
 				$page = get_page_by_title('404');
 				if($page){
 					$content = $page->post_content;
