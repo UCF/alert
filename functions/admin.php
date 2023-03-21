@@ -1,6 +1,6 @@
 <?php
 
-if (is_login()){
+if (is_login_page()){
 	add_action('login_head', 'login_scripts', 0);
 }
 
