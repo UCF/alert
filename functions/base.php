@@ -397,11 +397,7 @@ function dump(){
  * @return void
  * @author Jared Lang
  **/
-<<<<<<< HEAD
-if (DEBUG){
-=======
 if (WP_DEBUG){
->>>>>>> php-notices
 	function debug($string){ /*
 		print "<!-- DEBUG: {$string} -->\n"; */
 	}
@@ -459,14 +455,7 @@ function indent($html, $n){
  **/
 function bootstrap_menus() {
 	class Bootstrap_Walker_Nav_Menu extends Walker_Nav_Menu {
-
-
-<<<<<<< HEAD
-			function start_lvl( &$output, $depth ) {
-=======
 			function start_lvl( &$output, $depth = 0, $args = array() ) {
->>>>>>> php-notices
-
 				$indent = str_repeat( "\t", $depth );
 				$output	   .= "\n$indent<ul class=\"dropdown-menu\">\n";
 
@@ -1099,15 +1088,9 @@ function footer_($tabs=2){
 function opengraph_setup(){
 	$options = get_option(THEME_OPTIONS_NAME);
 
-<<<<<<< HEAD
-	if (!(bool)$options['enable_og']){return;}
-=======
 	if ( ! isset( $options['enable_og'] ) || ! (bool)$options['enable_og'] ) {
 		return;
 	}
-
->>>>>>> php-notices
-	if (is_search()){return;}
 
 	global $post, $page;
 	setup_postdata($post);
@@ -1295,11 +1278,7 @@ function header_title(){
 function installed_custom_post_types(){
 	$installed = Config::$custom_post_types;
 
-<<<<<<< HEAD
-	return array_map(function( $class ){
-=======
 	return array_map( function( $class ) {
->>>>>>> php-notices
 		return new $class;
 	}, $installed);
 }
@@ -1311,11 +1290,7 @@ function installed_custom_post_types(){
 function installed_custom_taxonomies(){
 	$installed = Config::$custom_taxonomies;
 
-<<<<<<< HEAD
-	return array_map(function( $class ){
-=======
 	return array_map( function( $class ) {
->>>>>>> php-notices
 		return new $class;
 	}, $installed);
 }
@@ -1402,6 +1377,7 @@ add_action('do_meta_boxes', 'register_meta_boxes');
  * @author Jared Lang
  **/
 function save_meta_data($post){
+	$meta_box = null;
 	#Register custom post types metaboxes
 	foreach(installed_custom_post_types() as $custom_post_type){
 		if (post_type($post) == $custom_post_type->options('name')){
@@ -1535,12 +1511,21 @@ function _show_meta_boxes($post, $meta_box){
 				</div>
 			<?php endif;?>
 
-			<?php switch ($field['type']):
-				case 'text':?>
-				<input type="text" name="<?=$field['id']?>" id="<?=$field['id']?>" value="<?=($current_value) ? htmlentities($current_value) : $field['std']?>" />
+			<?php
+			switch ($field['type']):
+				case 'text':
+					$default_value = isset( $field['std'] ) ? $field['std'] : '';
+					$current_value = $current_value ? htmlentities( $current_value ) : $default_value;
+			?>
+				<input type="text" name="<?=$field['id']?>" id="<?=$field['id']?>" value="<?php echo $current_value; ?>" />
 
-			<?php break; case 'textarea':?>
-				<textarea name="<?=$field['id']?>" id="<?=$field['id']?>" cols="60" rows="4"><?=($current_value) ? htmlentities($current_value) : $field['std']?></textarea>
+			<?php
+				break;
+				case 'textarea':
+					$default_value = isset( $field['std'] ) ? $field['std'] : '';
+					$current_value = $current_value ? htmlentities( $current_value ) : $default_value;
+			?>
+				<textarea name="<?=$field['id']?>" id="<?=$field['id']?>" cols="60" rows="4"><?php echo $current_value; ?></textarea>
 
 			<?php break; case 'select':?>
 				<select name="<?=$field['id']?>" id="<?=$field['id']?>">
@@ -1582,16 +1567,9 @@ function _show_meta_boxes($post, $meta_box){
 		</tr>
 	<?php endforeach;?>
 	</table>
-
-<<<<<<< HEAD
-	<?php if($meta_box['helptxt']):?>
-	<p><?=$meta_box['helptxt']?></p>
-	<?php endif;?>
-=======
 	<?php if ( isset( $meta_box['helptxt'] ) && $meta_box['helptxt'] ) : ?>
 	<p><?php echo $meta_box['helptxt']; ?></p>
 	<?php endif; ?>
->>>>>>> php-notices
 	<?php
 }
 

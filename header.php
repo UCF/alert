@@ -26,15 +26,17 @@
 		</script>
 		<?php endif;?>
 
-		<script type="text/javascript">
-			var PRINT_HEADER_IMG = 'http://www.ucf.edu/wp-content/themes/Main-Site-Theme/static/img/ucflogo-print.png';
-		</script>
-
-		<?php $post_type = get_post_type($post->ID);
-			if ( ( $stylesheet_id = get_post_meta($post->ID, $post_type.'_stylesheet', true ) ) !== false
-				&& ( $stylesheet_url = wp_get_attachment_url( $stylesheet_id ) ) !== false) : ?>
+		<?php
+		if ( isset( $post ) && $post instanceof WP_Post ):
+			$post_type = get_post_type( $post->ID );
+			if ( ( $stylesheet_id = get_post_meta( $post->ID, $post_type.'_stylesheet', true ) ) !== false
+				&& ( $stylesheet_url = wp_get_attachment_url( $stylesheet_id ) ) !== false ) :
+		?>
 				<link rel='stylesheet' href="<?php echo $stylesheet_url; ?>" type='text/css' media='all' />
-		<?php endif; ?>
+		<?php
+			endif;
+		endif;
+		?>
 
 	</head>
 	<body>
