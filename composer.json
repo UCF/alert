@@ -1,0 +1,8 @@
+{
+    "name": "ucf/alert",
+    "description": "Theme that is built to fetch alert data from Roam Secure (or some other external source), create editable post data in WordPress, and generate a new feed for use by ucf.edu.",
+    "type": "wordpress-theme",
+    "require": {
+        "composer/installers": "~1.0"
+    }
+}

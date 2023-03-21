@@ -66,7 +66,7 @@ class Config{
 		);
 		$attr = array_merge($default, $attr);
 
-		$is_admin = (is_admin() or is_login());
+		$is_admin = (is_admin() or is_login_page());
 
 		if (
 			($attr['admin'] and $is_admin) or
@@ -107,7 +107,7 @@ class Config{
 		);
 		$attr = array_merge($default, $attr);
 
-		$is_admin = (is_admin() or is_login());
+		$is_admin = (is_admin() or is_login_page());
 
 		if (
 			($attr['admin'] and $is_admin) or
@@ -765,7 +765,7 @@ function get_menu($name, $classes=null, $id=null, $callback=null){
  * @return boolean
  * @author Jared Lang
  **/
-function is_login(){
+function is_login_page(){
 	return in_array($GLOBALS['pagenow'], array(
 			'wp-login.php',
 			'wp-register.php',
