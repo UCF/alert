@@ -1,5 +1,5 @@
 <?php get_header(); the_post();?>
-<div class="row page-content">
+<main class="row page-content" aria-label="Main content">
 	<div class="span8">
 		<?php
 			$alerts = get_posts(array(
@@ -58,5 +58,5 @@
 			?>
 		</div>
 	</div>
-</div>
+</main>
 <?php get_footer(); ?>
