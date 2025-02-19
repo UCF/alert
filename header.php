@@ -41,6 +41,6 @@
 	</head>
 	<body>
 		<div class="container">
-			<header class="row" id="header" aria-label="main title">
+			<header class="row" id="header" aria-label="Main title">
 				<h1 class="span10"><a href="<?php echo bloginfo('url'); ?>">UCF Alert</a></h1>
 			</header>
