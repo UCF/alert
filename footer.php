@@ -1,6 +1,6 @@
-			<div id="footer" class="span10 offset1">
+			<footer id="footer" class="span10 offset1">
 				<p>This page is maintained by UCF Communications. &copy; University of Central Florida</p>
-			</div>
+			</footer>
 		</div>
 	</body>
 	<?="\n".footer_()."\n"?>
