@@ -127,6 +127,12 @@ class Config{
  * @author Jared Lang
  **/
 abstract class Field{
+	public $name;
+	public $id;
+	public $value;
+	public $description;
+	public $default;
+
 	protected function check_for_default(){
 		if ($this->value === null){
 			$this->value = $this->default;
@@ -183,6 +189,8 @@ abstract class Field{
  * @author Jared Lang
  **/
 abstract class ChoicesField extends Field{
+	public $choices;
+
 	function __construct($attr){
 		$this->choices = @$attr['choices'];
 		parent::__construct($attr);
